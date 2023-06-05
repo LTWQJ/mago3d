@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/default">
+<head>
+	<meta charset="utf-8">
+    <meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width">
+    <meta name="robots" content="index,nofollow">
+	<title>数据列表 | mago3D</title>
+	<link rel="shortcut icon" th:href="@{/images/favicon.ico(cacheVersion=${contentCacheVersion})}">
+	<link rel="stylesheet" th:href="@{/css/{lang}/font/font.css(lang=${lang}, cacheVersion=${contentCacheVersion})}">
+	<link rel="stylesheet" th:href="@{/images/{lang}/icon/glyph/glyphicon.css(lang=${lang}, cacheVersion=${contentCacheVersion})}">
+	<link rel="stylesheet" th:href="@{/externlib/normalize/normalize.min.css(cacheVersion=${contentCacheVersion})}">
+	<link rel="stylesheet" th:href="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.css(cacheVersion=${contentCacheVersion})}">
+    <link rel="stylesheet" th:href="@{/css/{lang}/admin-style.css(lang=${lang}, cacheVersion=${contentCacheVersion})}">
+	<link rel="stylesheet" th:href="@{/externlib/json-viewer/json-viewer.css(cacheVersion=${contentCacheVersion})}">
+</head>
+<body>
+<th:block layout:fragment="pageCustomContent">
+	<div class="site-body">
+		<div class="container">
+			<div class="site-content">
+				<div th:replace="~{/fragments/sub-menu :: #subMenuWrap}"></div>
+				<div class="page-area">
+					<div th:replace="~{/fragments/page-header :: #pageHeaderWrap}"></div>
+					<div class="page-content">
+
+						<!-- S: 搜索 -->
+						<div class="filters">
+							<form id="searchForm" th:object="${dataInfo}" method="get" th:action="@{/data/list}" onsubmit="return searchCheck();">
+								<div class="input-group row">
+									<div class="input-set">
+										<label for="searchWord" th:text="#{search.word}"></label>
+										<select id="searchWord" name="searchWord" class="selectBoxClass">
+											<option value="" th:text="#{select}"></option>
+											<option value="data_name" th:text="数据名"></option>
+										</select>
+										<select id="searchOption" name="searchOption" class="selectBoxClass">
+											<option value="0" th:text="#{search.same}"></option>
+											<option value="1" th:text="#{search.include}"></option>
+										</select>
+										<input type="search" id="searchValue" name="searchValue" class="m" style="float: right;" />
+									</div>
+									<div class="input-set">
+										<label for="startDate" th:text="#{search.date}"></label>
+										<input type="text" id="startDate" name="startDate" class="s date" autocomplete="off" />
+										<span class="delimeter tilde">~</span>
+										<input type="text" id="endDate" name="endDate" class="s date" autocomplete="off" />
+									</div>
+									<div class="input-set">
+										<label for="orderWord" th:text="#{search.order}"></label>
+										<select id="orderWord" name="orderWord" class="selectBoxClass">
+											<option value="" th:text="#{search.basic}"></option>
+											<option value="data_name" th:text="数据名"></option>
+											<option value="insert_date" th:text="#{search.insert.date}"></option>
+										</select>
+										<select id="orderValue" name="orderValue" class="selectBoxClass">
+											<option value="" th:text="#{search.basic}"></option>
+											<option value="ASC" th:text="#{search.ascending}"></option>
+											<option value="DESC" th:text="#{search.descending.order}"></option>
+										</select>
+										<select id="listCounter" name="listCounter" class="selectBoxClass">
+											<option value="10" th:text="#{search.ten.count}"></option>
+											<option value="50" th:text="#{search.fifty.count}"></option>
+											<option value="100" th:text="#{search.hundred.count}"></option>
+										</select>
+									</div>
+									<div class="input-set">
+										<input type="submit" th:value="#{search}" />
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- E: 검색 -->
+
+						<!-- S:数据列表 -->
+						<div class="list">
+							<form id="listForm" th:object="${dataInfo}" method="post">
+								<input type="hidden" id="checkIds" name="checkIds" />
+								<div class="list-header row">
+									<div class="list-desc u-pull-left">
+										<span th:text="#{all.d}"></span>
+										<span class="totalCount" th:text="${pagination.totalCount}"></span>
+										<span th:text="#{search.what.count}"></span>
+										<span th:text="|${pagination.pageNo} / ${pagination.lastPage}|"></span>
+										<span th:text="#{search.page}"></span>
+									</div>
+									<div class="list-functions u-pull-right">
+										<div class="button-group">
+											<a href="#" class="button" onclick="uploadDataFile(); return false;">批量上传数据</a>
+										</div>
+									</div>
+								</div>
+								<table class="list-table scope-col" summary="数据列表树">
+									<caption class="hiddenTag">数据列表</caption>
+									<colgroup>
+										<col class="col-checkbox"></col>
+										<col class="col-number"></col>
+										<col class="col-name"></col>
+										<col class="col-name"></col>
+										<col class="col-name"></col>
+										<col class="col-name"></col>
+										<col class="col-name"></col>
+										<col class="col-name"></col>
+										<col class="col-functions"></col>
+										<col class="col-functions"></col>
+										<col class="col-functions"></col>
+										<col class="col-functions"></col>
+									</colgroup>
+									<thead>
+										<tr>
+											<th scope="col" class="col-checkbox">
+												<label for="chkAll" class="hiddenTag">“全部选择”复选框</label>
+												<input type="checkbox" id="chkAll" name="chkAll" />
+											</th>
+											<th scope="col" class="col-number" th:text="#{number}"></th>
+											<th scope="col" class="col-name">组名</th>
+											<th scope="col" class="col-name">数据名</th>
+											<th scope="col" class="col-name">ID</th>
+											<th scope="col" class="col-name">数据类型</th>
+											<th scope="col" class="col-name">共享类型</th>
+											<th scope="col" class="col-name">状态</th>
+											<th scope="col" class="col-name">地图</th>
+											<th scope="col" class="col-name">元信息</th>
+											<th scope="col" class="col-name">属性</th>
+											<th scope="col" class="col-name">对象属性</th>
+											<th scope="col" class="col-name">删除</th>
+											<th scope="col" class="col-date">注册日期</th>
+										</tr>
+									</thead> 
+									<tbody>
+										<tr th:if="${dataList.empty}">
+											<td colspan="14" class="col-none" th:text="#{data.does.not.exist}"></td>
+										</tr>
+
+										<tr th:if="${!dataList.empty}" th:each="dataInfo : ${dataList}">
+											<td class="col-checkbox">
+												<label class="hiddenTag">“选择”复选框</label>
+												<input type="checkbox" th:id="|dataId_${dataInfo.dataId}|" name="dataId" value="${dataInfo.dataId}" />
+											</td>
+											<td class="col-number" th:text="${pagination.rowNumber - dataInfoStat.index}"></td>
+											<td class="col-name ellipsis" style="max-width:200px;">
+												<a href="#" class="view-group-detail" th:text="${dataInfo.dataGroupName}" th:onclick="detailDataGroup([[${dataInfo.dataGroupId }]]); return false;"></a>
+											</td>
+											<td class="col-name">
+												<a th:href="@{/data/modify(dataId=${dataInfo.dataId}, pageNo=${pagination.pageNo}, ${pagination.searchParameters})}" th:text="${dataInfo.dataName}"></a>
+											</td>
+											<td class="col-name" th:text="${dataInfo.userId}"></td>
+											<td class="col-name" th:text="${dataInfo.dataType}"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.sharing, 'common')}" th:text="共同"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.sharing, 'public')}" th:text="公共"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.sharing, 'private')}" th:text="个人"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.sharing, 'group')}" th:text="组"></td>
+
+											<td class="col-type" th:if="${#strings.equals(dataInfo.status, 'processing')}" th:text="转换中"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.status, 'use')}" th:text="使用中"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.status, 'unused')}" th:text="停止使用"></td>
+											<td class="col-type" th:if="${#strings.equals(dataInfo.status, 'delete')}" th:text="删除"></td>
+
+											<td class="col-type">
+												<a href="#" th:onclick="viewDataInfo([[${dataInfo.dataId}]]); return false;">查看</a>
+											</td>
+											<td class="col-type">
+												<a href="#" th:onclick="detailMetainfo([[${dataInfo.dataId}]]); return false;">查看</a>
+											</td>
+
+											<td class="col-functions" >
+												<a href="#" th:if="${#bools.isTrue(dataInfo.attributeExist)}" th:text="|查看  |" th:onclick="detailDataAttribute([[${dataInfo.dataId}]], [[${dataInfo.dataName}]]); return false;"></a>
+												<a href="#" th:text="#{modified}" th:onclick="uploadDataAttribute([[${dataInfo.dataId}]], [[${dataInfo.dataName}]]); return false;">
+											</td>
+											<td class="col-functions">
+													<a href="#" th:if="${#bools.isTrue(dataInfo.objectAttributeExist)}" th:text="查看" th:onclick="detailDataObjectAttribute([[${dataInfo.dataId}]], [[${dataInfo.dataName}]]); return false;"></a>
+													<a href="#" th:text="#{modified}" th:onclick="uploadDataObjectAttribute([[${dataInfo.dataId}]], [[${dataInfo.dataName}]]); return false;"></a>
+											</td>
+
+											<td class="col-functions">
+												<a th:href="@{/data/delete(dataId=${dataInfo.dataId})}" class="image-button button-delete" th:value="#{delete}" onclick="return deleteWarning();"></a>
+											</td>
+											<td class="col-type">
+												<th:block th:text="${#temporals.format(dataInfo.insertDate,'yyyy-MM-dd HH:mm')}"></th:block>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</form>
+						</div>
+						<!-- 页面 -->
+						<div th:replace="~{/common/pagination :: #paginationArea}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 数据组 -->
+	<div th:replace="~{/data/group-dialog :: #dataGroupDialog}"></div>
+	<!-- 数据文件-->
+	<div th:replace="~{/data/data-file-dialog :: #uploadDataFileDialog}"></div>
+	<!-- 关于数据属性 -->
+	<div th:replace="~{/data/data-metainfo-dialog :: #dataMetainfoDialog}"></div>
+	<!-- 数据属性 -->
+	<div th:replace="~{/data/data-attribute-dialog :: #dataAttributeDialog}"></div>
+	<!-- 数据对象属性 -->
+	<div th:replace="~{/data/data-object-attribute-dialog :: #dataObjectAttributeDialog}"></div>
+	<!-- 数据属性文件 -->
+	<div th:replace="~{/data/data-attribute-file-dialog :: #uploadDataAttributeDialog}"></div>
+	<!-- 数据对象属性文件 -->
+	<div th:replace="~{/data/data-object-attribute-file-dialog :: #uploadDataObjectAttributeDialog}"></div>
+</th:block>
+<th:block layout:fragment="pageCustomScript">
+<script type="text/javascript" th:src="@{/externlib/jquery-3.3.1/jquery.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/jquery-3.3.1/jquery.form.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/handlebars-4.1.2/handlebars.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/json-viewer/json-viewer.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/handlebars-helper.js(lang=${lang},cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/common.js(lang=${lang},cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/message.js(lang=${lang},cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/navigation.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var searchWord = "[[${dataInfo.searchWord}]]";
+		var searchOption = "[[${dataInfo.searchOption}]]";
+		var orderWord = "[[${dataInfo.orderWord}]]";
+		var orderValue = "[[${dataInfo.orderValue}]]";
+		var listCounter = "[[${dataInfo.listCounter}]]";
+
+		if(searchWord != "") $("#searchWord").val("[[${dataInfo.searchWord}]]");
+		if(searchOption != "") $("#searchOption").val("[[${dataInfo.searchOption}]]");
+		if(orderWord != "") $("#orderWord").val("[[${dataInfo.orderWord}]]");
+		if(orderValue != "") $("#orderValue").val("[[${dataInfo.orderValue}]]");
+		if(listCounter != "") $("#listCounter").val("[[${dataInfo.listCounter}]]");
+
+		initDatePicker();
+		initCalendar(new Array("startDate", "endDate"), new Array("[[${dataInfo.startDate}]]", "[[${dataInfo.endDate}]]"));
+	});
+
+	// 完全选择
+	$("#chkAll").click(function() {
+		$(":checkbox[name=dataId]").prop("checked", this.checked);
+	});
+
+	// 关于数据组
+	function detailDataGroup(dataGroupId) {
+		dataGroupDialog.dialog( "open" );
+
+		$.ajax({
+			url: "/data-groups/" + dataGroupId,
+			//data: { "dataGroupId" : dataGroupId },
+			type: "GET",
+			headers: {"X-Requested-With": "XMLHttpRequest"},
+			dataType: "json",
+			success: function(msg){
+				if(msg.statusCode <= 200) {
+					var sharing = msg.dataGroup.sharing;
+					if(sharing == "common") {
+						sharing = "共同";
+					} else if(sharing == "public") {
+						sharing = "公共";
+					} else if(sharing == "private") {
+						sharing = "个人";
+					} else if(sharing == "group") {
+						sharing = "组";
+					}
+
+					$("#dataGroupNameInfo").html(msg.dataGroup.dataGroupName);
+					$("#dataGroupKeyInfo").html(msg.dataGroup.dataGroupKey);
+					$("#dataGroupTargetInfo").html(msg.dataGroup.dataGroupTarget);
+					$("#sharingInfo").html(sharing);
+					$("#userIdInfo").html(msg.dataGroup.userId);
+					$("#basicInfo").html(msg.dataGroup.basic ? '基本' : '选择');
+					$("#availableInfo").html(msg.dataGroup.available ? '使用' : '不使用');
+					$("#locationInfo").html(msg.dataGroup.longitude + " / " + msg.dataGroup.latitude);
+					$("#dataCountInfo").html(msg.dataGroup.dataCount);
+					$("#metainfoInfo").html(msg.dataGroup.metainfo);
+					$("#descriptionInfo").html(msg.dataGroup.description);
+
+				} else {
+					alert(JS_MESSAGE[msg.errorCode]);
+				}
+			},
+			error:function(request,status,error){
+				alert(JS_MESSAGE["ajax.error.message"]);
+			}
+		});
+	}
+
+	// 元信息
+	function detailMetainfo(dataId) {
+		dataMetainfoDialog.dialog( "open" );
+
+		$.ajax({
+			url: "/datas/" + dataId,
+			//data: { dataId : dataId },
+			type: "GET",
+			headers: {"X-Requested-With": "XMLHttpRequest"},
+			dataType: "json",
+			success: function(msg){
+				if(msg.statusCode <= 200) {
+					$("#dataMetainfo").html(msg.dataInfo.metainfo);
+				} else {
+					alert(JS_MESSAGE[msg.errorCode]);
+				}
+			},
+			error:function(request,status,error){
+				alert(JS_MESSAGE["ajax.error.message"]);
+			}
+		});
+	}
+
+	// 数据属性
+	function detailDataAttribute(dataId, dataName) {
+		dataAttributeDialog.dialog( "open" );
+		$("#dataNameForAttribute").html(dataName);
+
+		$.ajax({
+			url: "/datas/attributes/" + dataId,
+			type: "GET",
+			headers: {"X-Requested-With": "XMLHttpRequest"},
+			dataType: "json",
+			success: function(msg){
+				if(msg.statusCode <= 200) {
+					if(msg.dataAttribute !== null) {
+						//$("#dataAttributeForOrigin").html(msg.dataAttribute.attributes);
+						$("#dataAttributeViewer").html("");
+						var jsonViewer = new JSONViewer();
+						document.querySelector("#dataAttributeViewer").appendChild(jsonViewer.getContainer());
+						jsonViewer.showJSON(JSON.parse(msg.dataAttribute.attributes), -1, -1);
+					}
+				} else {
+					alert(JS_MESSAGE[msg.errorCode]);
+				}
+			},
+			error:function(request,status,error){
+				alert(JS_MESSAGE["ajax.error.message"]);
+			}
+		});
+	}
+	
+	// Data成批增加
+	function uploadDataFile() {
+		uploadDataFileDialog.dialog( "open" );
+		$("#dataFileName").val("");
+ 		$("#dataFileUploadLog > tbody:last").html("");
+	}
+	
+	// Data 关闭成批增加
+	function popClose() {
+		uploadDataFileDialog.dialog( "close" );
+		location.reload();
+
+	}
+	
+	// 批量注册（文件）
+	var dataFileUploadFlag = true;
+	function uploadDataFileSave() {
+		var fileName = $("#dataFileName").val();
+		var dataGroupId=$("#dataFileId").val();
+		if(fileName === "") {
+			alert(JS_MESSAGE["file.name.empty"]);
+			$("#dataFileName").focus();
+			return false;
+		}
+		
+		if( fileName.lastIndexOf("xlsx") <=0 
+				&& fileName.lastIndexOf("xls") <=0
+				&& fileName.lastIndexOf("json") <=0 
+				&& fileName.lastIndexOf("txt") <=0 ) {
+			alert(JS_MESSAGE["file.ext.invalid"]);
+			$("#dataFileName").focus();
+			return false;
+		}
+		
+		if(dataFileUploadFlag) {
+			dataFileUploadFlag = false;
+			$("#dataFileInfo").ajaxSubmit({
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+				dataType: "json",
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						if(msg.parseErrorCount !== 0 || msg.insertErrorCount !== 0) {
+							$("#dataFileName").val("");
+							alert(JS_MESSAGE["error.exist.in.processing"]);
+						} else {
+							alert(JS_MESSAGE["update"]);
+						}
+						
+						var source = $("#templateDataFileUploadLog").html();
+						var template = Handlebars.compile(source);
+						var dataFileUploadHtml = template(msg);
+						
+						$("#dataFileUploadLog").html("");
+		                $("#dataFileUploadLog").append(dataFileUploadHtml);
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+	    			}
+					dataFileUploadFlag = true;
+				},
+				error:function(request,status,error){
+					alert(JS_MESSAGE["ajax.error.message"]);
+					dataFileUploadFlag = true;
+				}
+			});
+		} else {
+			alert(JS_MESSAGE["button.dobule.click"]);
+			return;
+		}
+	}
+
+	// 修改数据属性
+	function uploadDataAttribute(dataId, dataName) {
+		uploadDataAttributeDialog.dialog( "open" );
+		$("#attributeFileName").val("");
+		$("#dataAttributeUploadLog").html("");
+		$("#attributeFileDataId").val(dataId);
+		$("#attributeDataName").html(dataName);
+	}
+
+	// 数据属性文件 upload
+	var dataAttributeFileUploadFlag = true;
+	function dataAttributeFileUpload() {
+		var fileName = $("#attributeFileName").val();
+		if(fileName === "") {
+			alert(JS_MESSAGE["file.name.empty"]);
+			$("#attributeFileName").focus();
+			return false;
+		}
+		if( fileName.lastIndexOf("json") <=0 && fileName.lastIndexOf("txt") <=0 ) {
+			alert(JS_MESSAGE["file.ext.invalid"]);
+			$("#fileName").focus();
+			return false;
+		}
+
+		if(dataAttributeFileUploadFlag) {
+			dataAttributeFileUploadFlag = false;
+			$("#dataAttributeInfo").ajaxSubmit({
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+				dataType: "json",
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						if(msg.parseErrorCount != 0 || msg.insertErrorCount != 0) {
+							alert(JS_MESSAGE["error.exist.in.processing"]);
+						} else {
+							alert(JS_MESSAGE["update"]);
+						}
+						
+						var source = $("#templateDataAttributeUploadLog").html();
+						var template = Handlebars.compile(source);
+						var dataAttributeUploadHtml = template(msg);
+						
+						$("#dataAttributeUploadLog").html("");
+		                $("#dataAttributeUploadLog").append(dataAttributeUploadHtml);
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+	    			}
+					dataAttributeFileUploadFlag = true;
+				},
+				error:function(request,status,error){
+					alert(JS_MESSAGE["ajax.error.message"]);
+					dataAttributeFileUploadFlag = true;
+				}
+			});
+		} else {
+			alert(JS_MESSAGE["button.dobule.click"]);
+			return;
+		}
+	}
+	
+	// 数据 Object 属性
+	function detailDataObjectAttribute(dataId, dataName) {
+		dataObjectAttributeDialog.dialog( "open" );
+		$("#dataNameForObjectAttribute").html(dataName);
+
+		$.ajax({
+			url: "/datas/object/attributes/" + dataId,
+			type: "GET",
+			headers: {"X-Requested-With": "XMLHttpRequest"},
+			dataType: "json",
+			success: function(msg){
+				if(msg.statusCode <= 200) {
+					if(msg.dataObjectAttribute !== null) {
+						//$("#dataObjectAttributeForOrigin").html(msg.dataObjectAttribute.attributes);
+						$("#dataObjectAttributeViewer").html("");
+						var jsonViewer = new JSONViewer();
+						document.querySelector("#dataObjectAttributeViewer").appendChild(jsonViewer.getContainer());
+						jsonViewer.showJSON(JSON.parse(msg.dataObjectAttribute.attributes), -1, -1);
+					}
+				} else {
+					alert(JS_MESSAGE[msg.errorCode]);
+				}
+			},
+			error:function(request,status,error){
+				alert(JS_MESSAGE["ajax.error.message"]);
+			}
+		});
+	}
+
+	// Data Object Attribute修改文件
+	function uploadDataObjectAttribute(dataId, dataName) {
+		uploadDataObjectAttributeDialog.dialog( "open" );
+		$("#objectAttributeFileName").val("");
+		$("#dataObjectAttributeUploadLog").html("");
+		$("#objectAttributeFileDataId").val(dataId);
+		$("#objectAttributeDataName").html(dataName);
+	}
+
+	// Data Object 属性文件 upload
+	var dataObjectAttributeFileUploadFlag = true;
+	function dataObjectAttributeFileUpload() {
+		var fileName = $("#objectAttributeFileName").val();
+		if(fileName === "") {
+			alert(JS_MESSAGE["file.name.empty"]);
+			$("#object_attribute_file_name").focus();
+			return false;
+		}
+
+		if( fileName.lastIndexOf("json") <=0 && fileName.lastIndexOf("txt") <=0 ) {
+			alert(JS_MESSAGE["file.ext.invalid"]);
+			$("#file_name").focus();
+			return false;
+		}
+
+		if(dataObjectAttributeFileUploadFlag) {
+			dataObjectAttributeFileUploadFlag = false;
+			$("#dataObjectAttributeInfo").ajaxSubmit({
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+				dataType: "json",
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						if(msg.parseErrorCount != 0 || msg.insertErrorCount != 0) {	
+							alert(JS_MESSAGE["error.exist.in.processing"]);
+						} else {
+							alert(JS_MESSAGE["update"]);
+						}
+						
+						var source = $("#templateDataObjectAttributeUploadLog").html();
+						var template = Handlebars.compile(source);
+						var dataObjectAttributeUploadHtml = template(msg);
+						
+						$("#dataObjectAttributeUploadLog").html("");
+		                $("#dataObjectAttributeUploadLog").append(dataObjectAttributeUploadHtml);
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+	    			}
+					dataObjectAttributeFileUploadFlag = true;
+				},
+				error:function(request,status,error){
+					alert(JS_MESSAGE["ajax.error.message"]);
+					dataObjectAttributeFileUploadFlag = true;
+				}
+			});
+		} else {
+			alert(JS_MESSAGE["button.dobule.click"]);
+			return;
+		}
+	}
+
+	function searchCheck() {
+		if($("#searchOption").val() == "1") {
+			if(confirm(JS_MESSAGE["search.option.warning"])) {
+				// go
+			} else {
+				return false;
+			}
+		}
+
+		var startDate = $("#startDate").val();
+		var endDate = $("#endDate").val();
+		if(startDate != null && startDate != "" && endDate != null && endDate != "") {
+			if(parseInt(startDate) > parseInt(endDate)) {
+				alert(JS_MESSAGE["search.date.warning"]);
+				$("#startDate").focus();
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// 关于数据组
+	var dataGroupDialog = $( ".dataGroupDialog" ).dialog({
+		autoOpen: false,
+		width: 800,
+		height: 550,
+		modal: true,
+		resizable: false
+	});
+	// 数据 metainfo 拨号日志
+	var dataMetainfoDialog = $( ".dataMetainfoDialog" ).dialog({
+		autoOpen: false,
+		width: 500,
+		height: 255,
+		modal: true,
+		resizable: false
+	});
+	// 数据属性拨号日志
+	var dataAttributeDialog = $( ".dataAttributeDialog" ).dialog({
+		autoOpen: false,
+		width: 800,
+		height: 550,
+		modal: true,
+		resizable: false
+	});
+	// 数据 Object 属性拨号日志
+	var dataObjectAttributeDialog = $( ".dataObjectAttributeDialog" ).dialog({
+		autoOpen: false,
+		width: 800,
+		height: 550,
+		modal: true,
+		resizable: false
+	});
+	
+	// 数据成批注册拨号日志
+	var uploadDataFileDialog = $( ".uploadDataFileDialog").dialog({
+		autoOpen: false,
+		width: 600,
+		height: 445,
+		modal: true,
+		resizable: false,
+		close: function() {
+			// 刷新页面
+			location.reload(); }
+	});
+	
+	// 一个数据属性注册拨号日志
+	var uploadDataAttributeDialog = $( ".uploadDataAttributeDialog" ).dialog({
+		autoOpen: false,
+		width: 600,
+		height: 445,
+		modal: true,
+		resizable: false,
+		close: function() { location.reload(); }
+	});
+	// 데이터 Object 속성 하나 등록
+	var uploadDataObjectAttributeDialog = $( ".uploadDataObjectAttributeDialog" ).dialog({
+		autoOpen: false,
+		width: 600,
+		height: 445,
+		modal: true,
+		resizable: false,
+		close: function() { location.reload(); }
+	});
+	
+	// 在地图上查找-- common.js, openFindDataPoint
+	function viewDataInfo(dataId) {
+		openFindDataPoint(dataId, "list");
+	}
+</script>
+</th:block>
+</body>
+</html>

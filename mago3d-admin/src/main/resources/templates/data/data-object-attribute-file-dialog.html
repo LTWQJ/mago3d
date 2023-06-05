@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="uploadDataObjectAttributeDialog" class="uploadDataObjectAttributeDialog" title="Data Object Attribute">
+		<form id="dataObjectAttributeInfo" name="dataObjectAttributeInfo" th:action="@{/datas/object/attributes}" method="post" enctype="multipart/form-data">
+			<input type="hidden" id="objectAttributeFileDataId" name="objectAttributeFileDataId" />
+			<table class="inner-table scope-row" style="width: 95%;" summary="上传数据对象属性对话">
+				<caption class="hiddenTag">上传数据对象属性对话</caption>
+				<colgroup>
+					<col class="col-sub-label xl"></col>
+					<col class="col-data"></col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th class="col-sub-label">数据名</th>
+						<td id="objectAttributeDataName"></td>
+					</tr>
+					<tr>
+						<th class="col-sub-label">上传文件</th>
+						<td>
+							<div class="inner-data">
+								<label for="objectAttributeFileName" class="hiddenTag">对象属性文件名</label>
+								<input type="file" id="objectAttributeFileName" name="objectAttributeFileName" class="col-data" />
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="button-group">
+				<input type="button" class="button" onclick="dataObjectAttributeFileUpload();" th:value="#{data.file.save}" />
+			</div>
+			<!-- <table class="inner-table scope-row" style="width: 95%;" summary="데이터 오브젝트 속성 업로드 테이블">
+				<caption class="hiddenTag">데이터 오브젝트 속성 업로드</caption>
+				<colgroup>
+					<col class="col-sub-label xl"></col>
+					<col class="col-data"></col>
+				</colgroup>
+				<tbody id="dataObjectAttributeUploadLog"></tbody>
+			</table> -->
+		</form>
+	</div>
+
+	<script id="templateDataObjectAttributeUploadLog" type="text/x-handlebars-template">
+				<tr>
+					<td colspan="2" style="text-align: center;">Result of parsing</td>
+				</tr>
+				<tr>
+					<td> 总数</td>
+					<td>{{totalCount}}</td>
+				</tr>
+				<tr>
+					<td> 成功次数 </td>
+					<td>{{parseSuccessCount}}</td>
+				</tr>
+				<tr>
+					<td> 失败次数 </td>
+					<td> {{parseErrorCount}}</td>
+				</tr>
+				<tr>
+					<td> 数据库注册数 </td>
+					<td> {{insertSuccessCount}} </td>
+				</tr>
+				<tr>
+					<td> 数据库修改数 </td>
+					<td> {{updateSuccessCount}} </td>
+				</tr>
+				<tr>
+					<td> 数据库故障数 </td>"
+					<td> {{insertErrorCount}}</td>
+				</tr>
+	</script>
+</body>
+</html>

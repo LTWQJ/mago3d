@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="dataObjectAttributeDialog" class="basicTable" title="Data Object Attribute" style="display: none;">
+		<table class="inner-table scope-row" summary="数据对象属性对话">
+			<caption class="hiddenTag">数据对象属性对话</caption>
+			<colgroup>
+				<col class="col-label"></col>
+				<col class="col-data"></col>
+			</colgroup>
+			<tr>
+				<th class="col-label" scope="row" style="text-align: center; min-width: 100px;">数据名</th>
+				<td id="dataNameForObjectAttribute" class="col-data"></td>
+			</tr>
+			<tr>
+				<th class="col-label" scope="row" style="text-align: center; min-width: 100px;">属性</th>
+				<td id="dataObjectAttributeViewer" class="col-data" style="font-size: 14px;"></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

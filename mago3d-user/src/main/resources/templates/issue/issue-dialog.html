@@ -1,0 +1,62 @@
+<form id="issueForm" name="issueForm" method="post" onsubmit="return false;">
+	<input type="hidden" id="issueDataId" name="issueDataId" value="" />
+	<input type="hidden" id="issueDataKey" name="issueDataKey" value="" />
+	<input type="hidden" id="issueObjectKey" name="issueObjectKey" value="" />
+	<input type="hidden" id="issueDataGroupId" name="issueDataGroupId" value="" />
+<div id="issueDialog" class="basicTable" style="display: none;" title="注册问题" >
+	<table summary="问题登记表">
+	<caption class="hiddenTag">注册问题</caption>
+		<col class="col-label" style="width: 100px;" />
+		<col class="col-data" />
+		<tr style="height: 30px;">
+			<th class="col-label" scope="row">数据组名称</th>
+			<td id="issueDataGroupName" class="col-data ellipsis">
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">数据名</th>
+			<td id="issueDataName" class="col-data">
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">经度</th>
+			<td class="col-data">
+				<label for="issueLongitude" class="hiddenTag">经度</label>
+				<input type="text" id="issueLongitude" name="issueLongitude" readonly="readonly" size="25" style="background-color: #CBCBCB;" />
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">纬度</th>
+			<td class="col-data">
+				<label for="issueLatitude" class="hiddenTag">纬度</label>
+				<input type="text" id="issueLatitude" name="issueLatitude" readonly="readonly" size="25" style="background-color: #CBCBCB;" />
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">高度</th>
+			<td class="col-data">
+				<label for="issueAltitude" class="hiddenTag">高度</label>
+				<input type="text" id="issueAltitude" name="issueAltitude" readonly="readonly" size="25" style="background-color: #CBCBCB;" />
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">标题</th>
+			<td class="col-data">
+				<label for="issueTitle" class="hiddenTag">标题</label>
+				<textarea id="issueTitle" name="issueTitle" rows="2" cols="47"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th class="col-label" scope="row">内容</th>
+			<td class="col-data">
+				<label for="issueContents" class="hiddenTag">内容</label>
+				<textarea id="issueContents" name="issueContents" rows="5" cols="47"></textarea>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="btns" style="margin-top: 10px;">
+		<button type="button" id="issueSaveButton" onclick="insertIssue(); return false;" class="focusA btn-full"><spring:message code='save'/></button>
+	</div>
+</div>
+</form>

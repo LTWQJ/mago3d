@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div id="uploadDataFileDialog" class="uploadDataFileDialog" title="批量注册(Files)">
+
+		<form id="dataFileInfo" name="dataFileInfo" th:action="@{/datas/bulk-upload}" method="post" enctype="multipart/form-data">
+			<table class="inner-table scope-row" style="width: 95%;">
+				<colgroup>
+					<col class="col-sub-label xl">
+					<col class="col-data">
+				</colgroup>
+				<tbody>
+				<tr>
+					<th class="col-sub-label">
+						<label for="dataGroupId">数据组名称</label>
+					</th>
+					<td>
+						<select id="dataGroupId" name="dataGroupId" class="selectBoxClass" th:each="dataGroup : ${dataGroupList}">
+							<option th:text="${dataGroup.dataGroupName}" th:value="${dataGroup.dataGroupId}" ></option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-sub-label" th:text="#{data.upload.file}"></th>
+					<td>
+						<div class="inner-data">
+							<input type="file" id="dataFileName" name="dataFileName" class="col-data" />
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			<div class="button-group">
+				<!--				保存文件-->
+				<input type="button" onclick="uploadDataFileSave();" class="button" th:value="#{data.file.save}" />
+			</div>
+
+			<table id="dataFileUploadLog" class="inner-table scope-row" style="width: 95%;">
+				<colgroup>
+					<col class="col-sub-label xl">
+					<col class="col-data">
+				</colgroup>
+				<tbody></tbody>
+			</table>
+		</form>
+	</div>
+	<script id="templateDataFileUploadLog" type="text/x-handlebars-template">
+		<tr>
+			<td colspan="2" style="text-align: center;">解析结果</td>
+		</tr>
+		<tr>
+			<td> 总数</td>
+			<td>{{totalCount}}</td>
+		</tr>
+		<tr>
+			<td> 成功次数 </td>
+			<td>{{parseSuccessCount}}</td>
+		</tr>
+		<tr>
+			<td> 失败次数 </td>
+			<td> {{parseErrorCount}}</td>
+		</tr>
+		<tr>
+			<td> 数据库注册数 </td>
+			<td> {{insertSuccessCount}} </td>
+		</tr>
+		<tr>
+			<td> 数据库修改数 </td>
+			<td> {{updateSuccessCount}} </td>
+		</tr>
+		<tr>
+			<td> 数据库故障数 </td>"
+			<td> {{insertErrorCount}}</td>
+		</tr>
+	</script>
+</body>
+</html>

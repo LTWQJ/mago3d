@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/default">
+<head>
+	<title>运营政策</title>
+	<th:block layout:fragment="pageCustomStyle">
+		<link rel="stylesheet" th:href="@{/css/{lang}/font/font.css(lang=${lang},cacheVersion=${contentCacheVersion})}" />
+		<link rel="stylesheet" th:href="@{/images/{lang}/icon/glyph/glyphicon.css(lang=${lang},cacheVersion=${contentCacheVersion})}" />
+		<link rel="stylesheet" th:href="@{/externlib/normalize/normalize.min.css(cacheVersion=${contentCacheVersion})}" />
+		<link rel="stylesheet" th:href="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.css(cacheVersion=${contentCacheVersion})}" />
+		<link rel="stylesheet" th:href="@{/css/fontawesome-free-5.2.0-web/css/all.min.css(cacheVersion=${contentCacheVersion})}">
+		<link rel="stylesheet" th:href="@{/css/{lang}/admin-style.css(lang=${lang},cacheVersion=${contentCacheVersion})}" />
+	</th:block>
+</head>
+<body>
+<th:block layout:fragment="pageCustomContent">
+	<div class="site-body">
+		<div class="container">
+			<div class="site-content">
+				<div th:replace="~{/fragments/sub-menu :: #subMenuWrap}"></div>
+				<div class="page-area">
+					<div th:replace="~{/fragments/page-header :: #pageHeaderWrap}"></div>
+					<div class="page-content">
+						<div class="content-desc u-pull-right">
+							<span class="icon-glyph glyph-emark-dot color-warning"></span>
+							<th:block th:text="#{check}"></th:block>
+							&nbsp;
+						</div>
+						<div class="tabs">
+							<ul>
+								<li><a href="#userTab">用户</a></li>
+								<li><a href="#passwordTab">密码</a></li>
+								<li><a href="#securityTab">安全</a></li>
+								<li><a href="#contentTab">内容</a></li>
+								<li><a href="#uploadTab">用户上传文件</a></li>
+							</ul>
+								<div th:replace="~{/policy/modify-user :: #userTab}"></div>
+								<div th:replace="~{/policy/modify-password :: #passwordTab}"></div>
+								<div th:replace="~{/policy/modify-security :: #securityTab}"></div>
+								<div th:replace="~{/policy/modify-content :: #contentTab}"></div>
+								<div th:replace="~{/policy/modify-upload :: #uploadTab}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+<th:block layout:fragment="pageCustomScript">
+
+<script type="text/javascript" th:src="@{/externlib/jquery-3.3.1/jquery.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/common.js(lang=${lang},cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/message.js(lang=${lang},cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/navigation.js(cacheVersion=${contentCacheVersion})}"></script>
+
+<script th:inline="javascript">
+	$(document).ready(function() {
+		$( ".tabs" ).tabs();
+	});
+
+	var updatPolicyUserFlag = true;
+	function updatePolicyUser() {
+	    if(updatPolicyUserFlag) {
+	        if( userCheck() === false ) return false;
+	        updatPolicyUserFlag = false;
+	        var formData = $('#policyUser').serialize();
+	        $.ajax({
+				url: "/policies/user/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("用户策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicyUserFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicyUserFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	var updatPolicyPasswordFlag = true;
+	function updatePolicyPassword() {
+		if(updatPolicyPasswordFlag) {
+	        if( passwordCheck() === false ) return false;
+
+	        updatPolicyPasswordFlag = false;
+	        var formData = $('#policyPassword').serialize();
+	        $.ajax({
+				url: "/policies/password/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("密码策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicyPasswordFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicyPasswordFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	var updatPolicyNoticeFlag = true;
+	function updatePolicyNotice() {
+		if(updatPolicyNoticeFlag) {
+	        if( noticeCheck() === false ) return false;
+
+	        updatPolicyNoticeFlag = false;
+	        var formData = $('#policyNotice').serialize();
+	        $.ajax({
+				url: "/policies/notice/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("通知策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicyNoticeFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicyNoticeFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	var updatPolicySecurityFlag = true;
+	function updatePolicySecurity() {
+		if(updatPolicySecurityFlag) {
+	        if( securityCheck() === false ) return false;
+
+	        updatPolicySecurityFlag = false;
+	        var formData = $('#policySecurity').serialize();
+	        $.ajax({
+				url: "/policies/security/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("安全策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicySecurityFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicySecurityFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	var updatPolicyContentFlag = true;
+	function updatePolicyContent() {
+		if(updatPolicyPasswordFlag) {
+	        if( contentCheck() === false ) return false;
+
+	        updatPolicyContentFlag = false;
+	        var formData = $('#policyContent').serialize();
+	        $.ajax({
+				url: "/policies/content/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("内容策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicyContentFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicyContentFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	var updatPolicyUploadFlag = true;
+	function updatePolicyUpload() {
+		if(updatPolicyPasswordFlag) {
+	        if( uploadCheck() === false ) return false;
+
+	        updatPolicyUploadFlag = false;
+	        var formData = $('#policyUpload').serialize();
+	        $.ajax({
+				url: "/policies/upload/" + [[${policy.policyId}]],
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert("上载策略已修改");
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					updatPolicyUploadFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        updatPolicyUploadFlag = true;
+				}
+			});
+	    } else {
+	        alert("正在进行中。");
+	        return;
+		}
+	}
+
+	function numkeyCheck(event) {
+		var keyValue = event.keyCode;
+		if((keyValue >= 48) && (keyValue <= 57)) {
+			return true;
+		}
+		return false;
+	}
+
+	function userCheck() {
+		if(!$('#userIdMinLength').val()) {
+			alert('请输入用户名的最小长度。');
+			$('#userIdMinLength').focus();
+			return false;
+		}
+		if(!$('#userFailSigninCount').val()) {
+			alert('请输入登录失败的次数。');
+			$('#userFailSigninCount').focus();
+			return false;
+		}
+		if(!$('#userFailLockRelease').val()) {
+			alert('请输入登录失败解锁期限。');
+			$('#userFailLockRelease').focus();
+			return false;
+		}
+		if(!$('#userLastSigninLock').val()) {
+			alert('请从上次登录开始输入锁定期限。');
+			$('#userLastSigninLock').focus();
+			return false;
+		}
+		return true;
+	}
+
+	function passwordCheck() {
+		if(!$('#passwordChangeTerm').val()) {
+			alert('请输入密码更改周期。');
+			$('#passwordChangeTerm').focus();
+			return false;
+		}
+		if(!$('#passwordMinLength').val()) {
+			alert('请输入密码的最小长度。');
+			$('#passwordMinLength').focus();
+			return false;
+		}
+		if(!$('#passwordMaxLength').val()) {
+			alert('请输入密码的最大长度。');
+			$('#passwordMaxLength').focus();
+			return false;
+		}
+		if(!$('#passwordEngUpperCount').val()) {
+			alert('请输入密码的英文大写字母数。');
+			$('#passwordEngUpperCount').focus();
+			return false;
+		}
+		if(!$('#passwordEngLowerCount').val()) {
+			alert('请输入密码的英文小写字母数。');
+			$('#passwordEngLowerCount').focus();
+			return false;
+		}
+		if(!$('#passwordNumberCount').val()) {
+			alert('请输入密码数字的数量。');
+			$('#passwordNumberCount').focus();
+			return false;
+		}
+		if(!$('#passwordSpecialCharCount').val()) {
+			alert('请输入密码特殊字母的数量。');
+			$('#passwordSpecialCharCount').focus();
+			return false;
+		}
+		if(!$('#passwordContinuousCharCount').val()) {
+			alert('请输入密码连续字符限制的数量。');
+			$('#passwordContinuousCharCount').focus();
+			return false;
+		}
+		if(!$('#passwordCreateChar').val()) {
+			alert('请输入初始密码生成字符串。');
+			$('#passwordCreateChar').focus();
+			return false;
+		}
+		if(!$('#passwordExceptionChar').val()) {
+			alert('请输入不能用作初始密码的特殊字母。');
+			$('#passwordExceptionChar').focus();
+			return false;
+		}
+		return true;
+	}
+
+	function securityCheck() {
+		if(!$('#securitySessionTimeout').val()) {
+			alert('请输入安全会话超时时间。');
+			$('#securitySessionTimeout').focus();
+			return false;
+		}
+		return true;
+	}
+
+	function contentCheck() {
+		if(!$('#contentCacheVersion').val()) {
+			alert('请输入 cache 版本以更新 css 和 js。');
+			$('#contentCacheVersion').focus();
+			return false;
+		}
+		if(!$('#contentMenuGroupRoot').val()) {
+			alert('请输入菜单组顶级组名称。');
+			$('#contentMenuGroupRoot').focus();
+			return false;
+		}
+		if(!$('#contentUserGroupRoot').val()) {
+			alert('请输入用户组的顶级组名称。');
+			$('#contentUserGroupRoot').focus();
+			return false;
+		}
+		if(!$('#contentLayerGroupRoot').val()) {
+			alert('请输入图层组的顶级组名称。');
+			$('#contentLayerGroupRoot').focus();
+			return false;
+		}
+		if(!$('#contentDataGroupRoot').val()) {
+			alert('请输入数据组顶级组名称。');
+			$('#contentDataGroupRoot').focus();
+			return false;
+		}
+		return true;
+	}
+
+	function uploadCheck() {
+		if(!$('#userUploadType').val()) {
+			alert('请输入可升级扩展名。');
+			$('#userUploadType').focus();
+			return false;
+		}
+		if(!$('#userConverterType').val()) {
+			alert('请输入可转换扩展名。');
+			$('#userConverterType').focus();
+			return false;
+		}
+		if(!$('#shapeUploadType').val()) {
+			alert('请输入 shpae 可上载扩展名。');
+			$('#shapeUploadType').focus();
+			return false;
+		}
+		if(!$('#userUploadMaxFilesize').val()) {
+			alert('请输入最大上传尺寸。');
+			$('#userUploadMaxFilesize').focus();
+			return false;
+		}
+		if(!$('#userUploadMaxCount').val()) {
+			alert('请输入上传文件的最大数量。');
+			$('#userUploadMaxCount').focus();
+			return false;
+		}
+		return true;
+	}
+
+	function noticeCheck() {
+		return true;
+	}
+</script>
+</th:block>
+</body>
+</html>

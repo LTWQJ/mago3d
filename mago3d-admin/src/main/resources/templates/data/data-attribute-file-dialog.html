@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="uploadDataAttributeDialog" class="uploadDataAttributeDialog" title="Data Attribute">
+		<form id="dataAttributeInfo" name="dataAttributeInfo" th::action="@{/datas/attributes}" method="post" enctype="multipart/form-data">
+			<input type="hidden" id="attributeFileDataId" name="attributeFileDataId" value="" />
+			<table class="inner-table scope-row" style="width: 95%;" summary="关于数据属性 ">
+			<caption class="hiddenTag">关于数据属性</caption>
+				<colgroup>
+					<col class="col-sub-label xl"></col>
+					<col class="col-data"></col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th class="col-sub-label">数据名</th>
+						<td id="attributeDataName"></td>
+					</tr>
+					<tr>
+						<th class="col-sub-label">上传文件</th>
+						<td>
+							<div class="inner-data">
+								<label for="attributeFileName" class="hiddenTag">属性文件名</label>
+								<input type="file" id="attributeFileName" name="attributeFileName" class="col-data" />
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="button-group">
+				<input type="button" class="button" onclick="dataAttributeFileUpload();" th:value="#{data.file.save}" />
+			</div>
+
+			<table class="inner-table scope-row" style="width: 95%;">
+				<colgroup>
+					<col class="col-sub-label xl"></col>
+					<col class="col-data"></col>
+				<colgroup>
+
+				<tbody id="dataAttributeUploadLog"></tbody>
+			</table>
+		</form>
+	</div>
+
+	<script id="templateDataAttributeUploadLog" type="text/x-handlebars-template">
+				<tr>
+					<td colspan="2" style="text-align: center;">Result of parsing</td>
+				</tr>
+				<tr>
+					<td> 总数</td>
+					<td>{{totalCount}}</td>
+				</tr>
+				<tr>
+					<td> 成功次数 </td>
+					<td>{{parseSuccessCount}}</td>
+				</tr>
+				<tr>
+					<td> 失败次数 </td>
+					<td> {{parseErrorCount}}</td>
+				</tr>
+				<tr>
+					<td> 数据库注册数 </td>
+					<td> {{insertSuccessCount}} </td>
+				</tr>
+				<tr>
+					<td> 数据库修改数 </td>
+					<td> {{updateSuccessCount}} </td>
+				</tr>
+				<tr>
+					<td> 数据库故障数 </td>"
+					<td> {{insertErrorCount}}</td>
+				</tr>
+	</script>
+</body>
+</html>

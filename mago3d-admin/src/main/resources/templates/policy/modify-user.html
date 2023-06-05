@@ -1,0 +1,90 @@
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+	<div id="userTab">
+		<form id="policyUser" th:object="${policy}" method="post" th:action="@{#}" onsubmit="return false;">
+			<table class="input-table scope-row" summary="环境设置用户表 ">
+			<caption class="hiddenTag">环境设置用户</caption>
+				<col class="col-label l" />
+				<col class="col-input" />
+				<tr>
+					<th class="col-label l" scope="row">
+						<label for="userIdMinLength">用户Idi最小长度</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input">
+						<input type="text" id="userIdMinLength" name="userIdMinLength" th:field="*{userIdMinLength}" class="s" maxlength="2" onKeyPress="return numkeyCheck(event);" />
+						<span class="table-desc">이상</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label path="userFailSigninCount">登录失败数</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input">
+						<input type="text" id="userFailSigninCount" name="userFailSigninCount" th:field="*{userFailSigninCount}" class="s" maxlength="2" onKeyPress="return numkeyCheck(event);" />
+						<span class="table-desc">회</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label path="userFailLockRelease">解锁登录失败的时间段</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input">
+						<input type="text" id="userFailLockRelease" name="userFailLockRelease" th:field="*{userFailLockRelease}" class="s" maxlength="3" onKeyPress="return numkeyCheck(event);" />
+						<span class="table-desc">일</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label path="userLastSigninLock">从上次登录开始的锁定期</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input">
+						<input type="text" id="userLastSigninLock" name="userLastSigninLock" th:field="*{userLastSigninLock}" class="s" maxlength="3" onKeyPress="return numkeyCheck(event);" />
+						<span class="table-desc">일</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label>允许重复登录</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input radio-set">
+						<input type="radio" id="userDuplicationSigninYn1" name="userDuplicationSigninYn" th:field="*{userDuplicationSigninYn}" value="Y" />
+						<label for="userDuplicationSigninYn1" th:text="#{use}"></label>
+						<input type="radio" id="userDuplicationSigninYn2" name="userDuplicationSigninYn" th:field="*{userDuplicationSigninYn}" value="N" />
+						<label for="userDuplicationSigninYn2" th:text="#{not.use} +'(기본값)'"></label>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label>用户登录身份验证方法</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input radio-set">
+						<input type="radio" id="userSigninType" name="userSigninType" th:field="*{userSigninType}" value="0" />
+						<label for="userSigninType" th:text="'常规 (Idy密码) (默认)'"></label>
+					</td>
+				</tr>
+				<tr>
+					<th class="col-label l" scope="row">
+						<label>如何删除用户信息</label>
+						<span class="icon-glyph glyph-emark-dot color-warning"></span>
+					</th>
+					<td class="col-input radio-set">
+						<input type="radio" id="userDeleteType1" name="userDeleteType" th:field="*{userDeleteType}" value="0" />
+						<label for="userDeleteType1" th:text="'逻辑 (默认)'"></label>
+						<input type="radio" id="userDeleteType2" name="userDeleteType" th:field="*{userDeleteType}" value="1" />
+						<label for="userDeleteType2" th:text="'物理 (删除DB)'"></label>
+					</td>
+				</tr>
+			</table>
+			<div class="button-group">
+				<div class="center-buttons">
+					<a href="#" class="button" th:text="#{save}" onclick="updatePolicyUser();"></a>
+				</div>
+			</div>
+		</form>
+	</div>
+</html>

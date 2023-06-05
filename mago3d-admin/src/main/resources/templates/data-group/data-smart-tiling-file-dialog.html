@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div id="uploadDataSmartTilingDialog" class="uploadDataSmartTilingDialog" title="SmartTiling 数据注册">
+        <form id="dataSmartTilingFileInfo" name="dataSmartTilingFileInfo" th:action="@{/datas/smart-tiling}" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="smartTilingFileDataGroupId" name="smartTilingFileDataGroupId" />
+            <table class="inner-table scope-row" style="width: 95%;" summary="SmatTiling 数据注册">
+                <caption class="hiddenTag">数据注册</caption>
+                <colgroup>
+                    <col class="col-sub-label xl"></col>
+                    <col class="col-data"></col>
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th class="col-sub-label">数据组名称</th>
+                        <td id="smartTilingDataGroupName"></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sub-label">上传文件</th>
+                        <td>
+                            <div class="inner-data">
+                                <label for="smartTilingFileName" class="hiddenTag">smartTiling 文件名</label>
+                                <input type="file" id="smartTilingFileName" name="smartTilingFileName" class="col-data" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="button-group">
+                <input type="button" class="button" th:value="#{data.file.save}" onclick="dataSmartTilingFileUpload();" />
+            </div>
+
+            <table class="inner-table scope-row" style="width: 95%;">
+                <col class="col-sub-label xl">
+                <col class="col-data">
+                <tbody id="dataSmartTilingUploadLog">
+                </tbody>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+
+<script id="templateDataSmartTilingUploadLog" type="text/x-handlebars-template">
+			<tr>
+				<td colspan="2" style="text-align: center;">Result of parsing</td>
+			</tr>
+			<tr>
+				<td> 总数</td>
+				<td>{{totalCount}}</td>
+			</tr>
+			<tr>
+				<td>成功次数 </td>
+				<td>{{parseSuccessCount}}</td>
+			</tr>
+			<tr>
+				<td> 失败次数 </td>
+				<td> {{parseErrorCount}}</td>
+			</tr>
+			<tr>
+				<td> 数据库注册数 </td>
+				<td> {{insertSuccessCount}} </td>
+			</tr>
+			<tr>
+				<td> 数据库修改数 </td>
+				<td> {{updateSuccessCount}} </td>
+			</tr>
+			<tr>
+				<td> 数据库故障数 </td>"
+				<td> {{insertErrorCount}}</td>
+			</tr>
+</script>

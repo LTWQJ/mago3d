@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/default">
+<head>
+	<meta charset="utf-8">
+    <meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width">
+    <meta name="robots" content="index,nofollow">
+	<title>用户列表 | mago3D</title>
+	<title>注册用户组 | mago3D</title>
+	<link rel="stylesheet" th:href="@{/css/{lang}/font/font.css(lang=${lang}, cacheVersion=${contentCacheVersion})}" />
+	<link rel="stylesheet" th:href="@{/images/{lang}/icon/glyph/glyphicon.css(lang=${lang}, cacheVersion=${contentCacheVersion})}" />
+	<link rel="stylesheet" th:href="@{/externlib/normalize/normalize.min.css(cacheVersion=${contentCacheVersion})}" />
+	<link rel="stylesheet" th:href="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.css(cacheVersion=${contentCacheVersion})}" />
+	<link rel="stylesheet" th:href="@{/css/{lang}/admin-style.css(lang=${lang}, cacheVersion=${contentCacheVersion})}" />	
+	<link rel="stylesheet" th:href="@{/css/fontawesome-free-5.2.0-web/css/all.min.css(cacheVersion=${contentCacheVersion})}">
+</head>
+<body>
+<th:block layout:fragment="pageCustomContent">
+	<div class="site-body">
+		<div class="container">
+			<div class="site-content">
+				<div th:replace="~{/fragments/sub-menu :: #subMenuWrap}"></div>
+				<div class="page-area">
+					<div th:replace="~{/fragments/page-header :: #pageHeaderWrap}"></div>
+					<div class="page-content">
+						<div class="input-header row">
+                            <div class="content-desc u-pull-right">
+                                <span class="icon-glyph glyph-emark-dot color-warning"></span>
+                                <th:block th:text="#{check}"></th:block>
+                            </div>
+                        </div>
+						<!-- S: 사용자 그룹 등록 -->
+						<form id="userGroup"  th:object ="${userGroup}" method="post" th:action="@{#}" onsubmit="return false;">
+							<table class="input-table scope-row" summary="用户组注册表">
+								<caption class="hiddenTag">注册用户组</caption>
+								<colgroup>
+									<col class="col-label"></col>
+									<col class="col-input"></col>
+								</colgroup>
+								<tr>
+									<th class="col-label" scope="row">
+										<label for="userGroupName" th:text="#{user.group.name}"></label>
+										<span class="icon-glyph glyph-emark-dot color-warning"></span>
+									</th>
+									<td class="col-input">
+										<input type ="text" id="userGroupName" name="userGroupName" class="l" maxlength="100" />
+									</td>
+								</tr>
+								<tr>
+									<th class="col-label" scope="row">
+										<label for="userGroupKey">用户组 Key</label>
+										<span class="icon-glyph glyph-emark-dot color-warning"></span>
+									</th>
+									<td class="col-input">
+										<input type="hidden" id="duplicationValue" name="duplicationValue" />
+										<input type="text" id="userGroupKey"  name="userGroupKey" class="l" />
+				  						<input type="button" id="userGroupDuplicationButton" th:value="#{overlap.check}" />
+									</td>
+								</tr>
+								<tr>
+									<th class="col-label" scope="row">
+										<label for="parentName">父组</label>
+										<span class="icon-glyph glyph-emark-dot color-warning"></span>
+									</th>
+									<td class="col-input">
+										<input type="hidden" id="parent" name="parent" />
+			 							<input type="text" id="parentName" name="parentName" class="l" readonly="true" />
+										<input type="button" id="userGroupButtion" value="选择高级用户组" />
+									</td>
+								</tr>
+				                <tr>
+									<th class="col-label m" scope="row">
+										是否默认
+										<span class="icon-glyph glyph-emark-dot color-warning"></span>
+									</th>
+									<td class="col-input radio-set">
+										<input type="radio" id="basicTrue" name="basic" value="true" />
+										<label for="basicTrue">基本</label>
+										<input type="radio" id="basicFalse" name="basic" value="false" checked="checked" />
+										<label for="basicFalse">选择</label>
+									</td>
+								</tr>
+								<tr>
+									<th class="col-label m" scope="row">
+										是否使用
+										<span class="icon-glyph glyph-emark-dot color-warning"></span>
+									</th>
+									<td class="col-input radio-set">
+										<input type="radio" id="availableTrue" name="available" value="true" checked="checked" />
+										<label for="availableTrue">使用</label>
+										<input type="radio" id="availableFalse" name="available" value="false" />
+										<label for="availableFalse">未使用</label>
+									</td>
+								</tr>
+								<tr>
+									<th class="col-label m" scope="row">
+										<label for="description" th:text="#{description}"></label>
+									</th>
+									<td class="col-input">
+										<input type="text" id="description" class="xl" />
+									</td>
+								</tr>
+							</table>
+							<div class="button-group">
+								<div class="center-buttons">
+									<input type="submit" th:value="#{save}" onclick="insertUserGroup();"/>
+									<input type="submit" onClick="formClear(); return false;" value="初始化" />
+									<a href="/user-group/list" class="button">目录</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 用户组 -->
+	<div th:replace="~{/user-group/user-group-list-dialog :: #userGroupListDialog}"></div> 
+</th:block>
+<th:block layout:fragment="pageCustomScript">
+<script type="text/javascript" th:src="@{/externlib/jquery-3.3.1/jquery.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/externlib/jquery-ui-1.12.1/jquery-ui.min.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/common.js(lang=${lang}, cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/{lang}/message.js(lang=${lang}, cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript" th:src="@{/js/navigation.js(cacheVersion=${contentCacheVersion})}"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+	});
+
+	function validate() {
+		var number = /^[0-9]+$/;
+		var exceptKorean = /^[a-zA-Z0-9]*$/;
+		if ($("#userGroupName").val() === null || $("#userGroupName").val() === "") {
+			alert("请输入用户组名称。");
+			$("#userGroupName").focus();
+			return false;
+		}
+		if ($("#userGroupKey").val() === null || $("#userGroupKey").val() === "") {
+			alert("请输入用户组Key(不可韩文)。");
+			$("#userGroupKey").focus();
+			return false;
+		}
+		if (!exceptKorean.test($("#userGroupKey").val())) {
+			alert("用户组Key不能输入韩文。");
+			$("#userGroupKey").val("");
+			$("#userGroupKey").focus();
+			return false;
+		}
+		if($("#duplicationValue").val() == null || $("#duplicationValue").val() == "") {
+			alert(JS_MESSAGE["group.key.duplication.check"]);
+			return false;
+		} else if($("#duplicationValue").val() == "1") {
+			alert(JS_MESSAGE["group.key.duplication"]);
+			return false;
+		}
+		if($("#parent").val() === null || $("#parent").val() === "" || !number.test($("#parent").val())) {
+			alert("请选择高级用户组。");
+			$("#parent").focus();
+			return false;
+		}
+	}
+
+	// 输入值变更时，重复确认，英文+数字
+	$("#userGroupKey").on("keyup", function(event) {
+		$("#duplicationValue").val(null);
+		if (!(event.keyCode >=37 && event.keyCode<=40)) {
+			var inputValue = $(this).val();
+			$(this).val(inputValue.replace(/[^a-z0-9]/gi,''));
+		}
+	});
+
+	// 그룹Key 중복 확인
+ 	$("#userGroupDuplicationButton").on("click", function() {
+		var userGroupKey = $("#userGroupKey").val();
+		if (userGroupKey == "") {
+			alert(JS_MESSAGE["group.key.empty"]);
+			$("#userGroupKey").focus();
+			return false;
+		}
+		$.ajax({
+			url: "/user-groups/duplication",
+			type: "GET",
+			data: {"userGroupKey": userGroupKey},
+			headers: {"X-Requested-With": "XMLHttpRequest"},
+			dataType: "json",
+			success: function(msg){
+				if(msg.statusCode <= 200) {
+					if(msg.duplication == true) {
+						alert(JS_MESSAGE["group.key.duplication"]);
+						$("#userGroupKey").focus();
+						return false;
+					} else {
+						alert(JS_MESSAGE["group.key.enable"]);
+						$("#duplicationValue").val(msg.duplication);
+					}
+				} else {
+					alert(JS_MESSAGE[msg.errorCode]);
+					console.log("---- " + msg.message);
+				}
+			},
+			error:function(request, status, error) {
+				//alert(JS_MESSAGE["ajax.error.message"]);
+				alert(" code : " + request.status + "\n" + ", message : " + request.responseText + "\n" + ", error : " + error);
+    		}
+		});
+	});
+
+	// 保存
+	var insertUserGroupFlag = true;
+	function insertUserGroup() {
+		if (validate() == false) {
+			return false;
+		}
+		if(insertUserGroupFlag) {
+			insertUserGroupFlag = false;
+			var formData = $("#userGroup").serialize();
+			$.ajax({
+				url: "/user-groups/insert",
+				type: "POST",
+				headers: {"X-Requested-With": "XMLHttpRequest"},
+		        data: formData,
+				success: function(msg){
+					if(msg.statusCode <= 200) {
+						alert(JS_MESSAGE["insert"]);
+						window.location.reload();
+					} else {
+						alert(JS_MESSAGE[msg.errorCode]);
+						console.log("---- " + msg.message);
+					}
+					insertUserGroupFlag = true;
+				},
+				error:function(request, status, error){
+			        alert(JS_MESSAGE["ajax.error.message"]);
+			        insertUserGroupFlag = true;
+				}
+			});
+		} else {
+			alert(JS_MESSAGE["button.dobule.click"]);
+			return;
+		}
+	}
+
+	var userGroupDialog = $("#userGroupListDialog").dialog({
+		autoOpen: false,
+		height: 600,
+		width: 1200,
+		modal: true,
+		overflow : "auto",
+		resizable: false
+	});
+
+	// 상위 User Group 찾기
+	$( "#userGroupButtion" ).on( "click", function() {
+		userGroupDialog.dialog( "open" );
+		userGroupDialog.dialog( "option", "title", "选择用户组");
+	});
+
+	// 상위 Node
+	function confirmParent(parent, parentName) {
+		$("#parent").val(parent);
+		$("#parentName").val(parentName);
+		userGroupDialog.dialog( "close" );
+	}
+
+	$( "#rootParentSelect" ).on( "click", function() {
+		$("#parent").val(0);
+		$("#parentName").val("${userGroup.parentName}");
+		userGroupDialog.dialog( "close" );
+	});
+
+	// 在地图上查找
+	$( "#mapButtion" ).on( "click", function() {
+		var url = "/user/location-map";
+		var width = 800;
+		var height = 700;
+
+        var popWin = window.open(url, "","toolbar=no ,width=" + width + " ,height=" + height
+                + ", directories=no,status=yes,scrollbars=no,menubar=no,location=no");
+        //popWin.document.title = layerName;
+	});
+
+	// 初始化
+	function formClear() {
+		$("#userGroupName").val("");
+		$("#userGroupKey").val("");
+		$("#parent").val(0);
+		$("#parentName").val("${userGroup.parentName}");
+		$("input:radio[name='basic']:radio[value='false']").prop('checked',true);
+		$("input:radio[name='available']:radio[value='true']").prop('checked', true);
+		$("#description").val("");
+	};
+
+</script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="dialogConverterJob" class="dialog" title="F4D Converter Job 注册">
+		<form id="converterJobForm" name="converterJobForm" th:action="@{#}" method="post">
+			<input type="hidden" id="converterCheckIds" name="converterCheckIds" />
+			<input type="hidden" id="dataType" name="dataType" />
+			<table class="inner-table scope-row" summary="F4D Converter Job 注册">
+				<caption class="hiddenTag">Job 注册</caption>
+				<colgroup>
+					<col class="col-sub-label xl"></col>
+					<col class="col-data"></col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th class="col-sub-label x">转换模板</th>
+						<td class="col-input">
+							<label for="converterTemplate" class="hiddenTag">转换模板</label>
+							<select id="converterTemplate" name="converterTemplate" class="select" style="height: 30px;">
+								<option value="basic"> 基本 </option>
+								<option value="building"> 建筑 </option>
+								<option value="extra-big-building"> 超大型建筑 </option>
+								<option value="point-cloud"> Point Cloud </option>
+								<!-- <option value="single-realistic-mesh"> 단일 Point Cloud </option> -->
+								<!-- <option value="splitted-realistic-mesh"> 분할 Point Cloud </option> -->
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th class="col-sub-label x">标题</th>
+						<td>
+							<div class="inner-data">
+								<label for="title" class="hiddenTag">标题</label>
+								<input type="text" id="title" name="title" class="l" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th class="col-sub-label x">Original Unit</th>
+						<td>
+							<label for="usf" class="hiddenTag">usf</label>
+							<select id="usf" name="usf" class="select" style="height: 30px;">
+								<option value="1"> 基本(1m) </option>
+								<option value="0.1"> 10 cm </option>
+								<option value="0.01"> 1 cm </option>
+								<option value="0.001"> 1 mm </option>
+								<option value="10"> 10 m </option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th class="col-sub-label x">高度方向</th>
+						<td>
+							<label for="yAxisUp" class="hiddenTag">yAxisUp</label>
+							<select id="yAxisUp" name="yAxisUp" class="select" style="height: 30px;">
+								<option value="N">Z 轴</option>
+								<option value="Y">Y轴</option>
+							</select>
+							<span class="marL10">如果 Z 轴朝向建筑物的天花板</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="button-group">
+				<a href="#" class="button" onclick="saveConverterJob(); return false;" style="color: white">保存</a>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

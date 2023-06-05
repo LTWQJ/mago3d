@@ -1,0 +1,40 @@
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org">
+<div id="fileInfoDetailDialog">
+<div id="fileInfoDetailDHTML" class="fileInfoDetailDialog" title="文件信息详细信息">
+</div>
+<script id="FileInfoDetailTemplate" type="text/x-handlebars-template">
+	<table style="width: 100%;">
+		<colgroup>
+			<col style="width: 25%; min-width: 150px; background: #eae8e8;">
+			<col style="width: 75%" >
+		</colgroup>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">文件名</th>
+			<td style="padding-left: 10px; padding-top: 10px;">{{fileName}}</td>
+		</tr>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">文件容量</th>
+			<td style="padding-left: 10px; padding-top: 10px;">{{multiply fileSize 0.001}} KB</td>
+		</tr>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">编码</th>
+			<td style="padding-left: 10px; padding-top: 10px;">
+				{{ifEquals shapeEncoding "null"}}
+			</td>
+		</tr>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">最终修改器</th>
+			<td style="padding-left: 10px; padding-top: 10px;">{{userId}}</td>
+		</tr>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">修复</th>
+			<td style="padding-left: 10px; padding-top: 10px;">{{comment}}</td>
+		</tr>
+		<tr style="height: 40px;">
+			<th scope="row" nowrap="nowrap" style="padding: 10px; border: 1px solid #f7f4f4;">上次修改日期</th>
+			<td style="padding-left: 10px; padding-top: 10px;">{{viewUpdateDate}}</td>
+		</tr>
+	</table>
+</script>
+</div>
+</html>

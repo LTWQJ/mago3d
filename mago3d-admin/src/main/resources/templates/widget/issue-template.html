@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${accessibility}">
+<script id="issueListSource" type="text/x-handlebars-template">
+
+    <table class="widget-table">
+        <col class="col-left" />
+        <col class="col-center" />
+        <col class="col-right" />
+        <thead>
+        <tr>
+            <td class="col-center"><em>问题名称</em></td>
+            <td class="col-center"><em>ID</em></td>
+            <td class="col-center"><em>注册日期</em></td>
+        </tr>
+        </thead>
+{{#greaterThan issueList.length 0}}
+    {{#each issueList}}
+        <tr>
+            <td class="col-left ellipsis" style="max-width: 160px;">
+                <span class="index"></span>
+                <em>{{title}}</em>
+            </td>
+            <td class="col-center">
+                {{userId}}
+            </td>
+            <td class="col-right">
+                {{viewInsertDate}}
+            </td>
+        </tr>
+    {{/each}}
+{{else}}
+        <tr>
+            <td colspan="3" class="col-none">问题列表（最近一个月）不存在。</td>
+        </tr>
+{{/greaterThan}}
+    </table>
+
+</script>
+</html>
