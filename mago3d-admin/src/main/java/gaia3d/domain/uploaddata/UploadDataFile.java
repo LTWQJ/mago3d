@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 사용자 업로드 파일 정보 
+ * 关于用户上载文件
  * @author Cheon JeongDae
  *
  */
@@ -83,7 +83,7 @@ public class UploadDataFile extends Search implements Serializable {
 	private LocalDateTime insertDate;
 
 	public String validate() {
-		// TODO 구현해야 한다.
+		// TODO 实施。
 		return null;
 	}
 

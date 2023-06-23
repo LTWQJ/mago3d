@@ -23,7 +23,7 @@ import gaia3d.domain.UserInfo;
 import gaia3d.service.UserService;
 
 /**
- * 사용자
+ * 用户
  * @author kimhj
  *
  */
@@ -36,7 +36,7 @@ public class UserRestController implements AuthorizationController {
 	private UserService userService;
 
 	/**
-	 * 사용자 ID 중복 체크
+	 * 重复检查用户 ID
 	 * @param model
 	 * @return
 	 */
@@ -67,7 +67,7 @@ public class UserRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 등록
+	 * 注册用户
 	 * @param request
 	 * @param userInfo
 	 * @param bindingResult

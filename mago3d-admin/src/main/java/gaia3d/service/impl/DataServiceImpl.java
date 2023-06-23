@@ -72,6 +72,9 @@ public class DataServiceImpl implements DataService {
 	 */
 	@Transactional(readOnly=true)
 	public List<DataInfo> getListData(DataInfo dataInfo) {
+		System.out.println("============shuju============================");
+		System.out.println(dataMapper.getListData(dataInfo));
+		System.out.println("============shuju============================");
 		return dataMapper.getListData(dataInfo);
 	}
 	
@@ -86,7 +89,7 @@ public class DataServiceImpl implements DataService {
 	}
 	
 	/**
-	 * Data 정보 취득
+	 * 获取数据信息
 	 * @param dataInfo
 	 * @return
 	 */
@@ -135,7 +138,7 @@ public class DataServiceImpl implements DataService {
 	}
 	
 	/**
-	 * Data 등록
+	 * Data 注册
 	 * @param dataInfo
 	 * @return
 	 */
@@ -164,7 +167,7 @@ public class DataServiceImpl implements DataService {
 	}
 	
 	/**
-	 * Data Bulk 등록
+	 * data bulk登记
 	 * @param dataFileInfo
 	 * @return
 	 */
@@ -173,9 +176,9 @@ public class DataServiceImpl implements DataService {
 		Integer dataGroupId = dataFileInfo.getDataGroupId();
 		String userId = dataFileInfo.getUserId();
 		
-		// 파일 이력을 저장
+		// 保存文件历史
 		dataMapper.insertDataFileInfo(dataFileInfo);
-		
+		//跳转到DataFileParser接口--问题调试
 		DataFileParser dataFileParser = new DataFileJsonParser();
 		Map<String, Object> map = dataFileParser.parse(dataGroupId, dataFileInfo);
 		
@@ -183,6 +186,7 @@ public class DataServiceImpl implements DataService {
 		dataGroup = dataGroupService.getDataGroup(dataGroup);
 		
 		@SuppressWarnings("unchecked")
+//				从map中拿到dataInfoList数据
 		List<DataInfo> dataInfoList = (List<DataInfo>) map.get("dataInfoList");
 		
 		DataFileParseLog dataFileParseLog = new DataFileParseLog();
@@ -199,9 +203,9 @@ public class DataServiceImpl implements DataService {
 		String sharing = SharingType.COMMON.name().toLowerCase();
 		String status = DataStatus.USE.name().toLowerCase();
 		int count = 0;
-		for(DataInfo dataInfo : dataInfoList) {
+		for(DataInfo dataInfo : dataInfoList) {//出问题地方----datainfolist为空，导致语句执行不到for循环体中
 			if(count == 0) {
-				// 데이터 그룹의 위치
+				// 数据组的位置
 				firstLongitude = dataInfo.getLongitude();
 				firstLatitude = dataInfo.getLatitude();
 				firstAltitude = dataInfo.getAltitude();
@@ -215,7 +219,7 @@ public class DataServiceImpl implements DataService {
 					dataInfo.setSharing(sharing);
 					dataInfo.setUserId(userId);
 					dataInfo.setStatus(status);
-					dataMapper.insertBulkData(dataInfo);
+					dataMapper.insertBulkData(dataInfo);//数据存不到data_info数据库--2023.5.10 ----主要观察这里--insertBulkData()函数无问题
 					insertSuccessCount++;
 				} else {
 					dataInfo.setDataId(dbDataInfo.getDataId());
@@ -243,7 +247,18 @@ public class DataServiceImpl implements DataService {
 			}
 			count++;
 		}
-		
+//========调试时添加下列代码，数据为给定数据====>ltw---2023.5.12
+        DataInfo dataInfo=new DataInfo();
+		    dataInfo.setDataId(1L);
+			dataInfo.setDataGroupTarget(dataGroupTarget);
+			dataInfo.setSharing(sharing);
+		    dataInfo.setDataGroupId(dataGroupId);
+			dataInfo.setUserId(userId);
+			dataInfo.setDataKey("11111");
+			dataInfo.setStatus(status);
+			dataMapper.insertBulkData(dataInfo);//数据存不到data_info数据库--2023.5.10 ----主要观察这里，证明insertBlukData函数无问题
+			insertSuccessCount++;
+//==========================================================================
 		dataFileInfo.setTotalCount((Integer) map.get("totalCount"));
 		dataFileInfo.setParseSuccessCount((Integer) map.get("parseSuccessCount"));
 		dataFileInfo.setParseErrorCount((Integer) map.get("parseErrorCount"));
@@ -274,7 +289,7 @@ public class DataServiceImpl implements DataService {
 	}
 	
 	/**
-	 * Data 상태 수정
+	 * 修改数据状态
 	 * @param dataInfo
 	 * @return
 	 */

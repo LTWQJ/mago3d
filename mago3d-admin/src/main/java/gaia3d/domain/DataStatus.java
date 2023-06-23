@@ -2,12 +2,12 @@ package gaia3d.domain;
 
 public enum DataStatus {
 
-	// 변환중
+	// 转换中
 	PROCESSING,
-	// 사용중
+	// 使用
 	USE,
-	// 사용 중지
+	// 停用
 	UNUSED,
-	// 삭제(화면 비표시)
+	// 删除（屏幕不显示）
 	DELETE;
 }

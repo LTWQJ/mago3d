@@ -98,7 +98,7 @@ public class ConverterServiceImpl implements ConverterService {
 	}
 
 	/**
-	 * 데이터 변환 현황
+	 * 数据转换现况
 	 * @return 데이터 변환 현황
 	 */
 	@Transactional(readOnly=true)
@@ -113,11 +113,11 @@ public class ConverterServiceImpl implements ConverterService {
 	@Transactional
 	public void insertConverter(ConverterJob converterJob) {
 
-		// 1. 변환해야 할 파일 목록(업로딩 데이터 목록)을 취득
-		// 2. converter job 을 등록
-		// 3. convert job file 하나씩 등록. 변환 상태를 ready(준비)로 등록.
-		// 4. queue 를 실행
-		// 7. 업로드 데이터의 ConverterCount를 1로 갱신
+		// 1. 获取需要转换的文件列表（上传数据列表）
+		// 2. converter job 注册
+		// 3. convert job file 逐个注册。将转换状态注册为“就绪”
+		// 4. queue 运行
+		// 7. 将上传数据的连接更新为 1
 
 		String dataGroupRootPath = propertiesConfig.getDataServiceDir();
 
@@ -129,14 +129,14 @@ public class ConverterServiceImpl implements ConverterService {
 		String[] uploadDataIds = converterJob.getConverterCheckIds().split(",");
 		for (String uploadDataId : uploadDataIds) {
 
-			// 1. 변환해야 할 파일 목록을 취득
+			// 1. 获取需要转换的文件列表
 			UploadData uploadData = new UploadData();
 			// uploadData.setUserId(userId);
 			uploadData.setUploadDataId(Long.valueOf(uploadDataId));
 			uploadData.setConverterTarget(true);
 			List<UploadDataFile> uploadDataFileList = uploadDataService.getListUploadDataFile(uploadData);
 
-			// 2. converter job 을 등록
+			// 2. converter job 注册
 			ConverterJob inConverterJob = new ConverterJob();
 			inConverterJob.setUploadDataId(Long.valueOf(uploadDataId));
 			inConverterJob.setDataGroupTarget(ServerTarget.ADMIN.name().toLowerCase());
@@ -146,15 +146,15 @@ public class ConverterServiceImpl implements ConverterService {
 			inConverterJob.setConverterTemplate(converterTemplate);
 			inConverterJob.setFileCount(uploadDataFileList.size());
 			inConverterJob.setYAxisUp(converterJob.getYAxisUp());
-			converterMapper.insertConverterJob(inConverterJob);
+			converterMapper.insertConverterJob(inConverterJob);//文件转换信息入库
 
 			Long converterJobId = inConverterJob.getConverterJobId();
 			int converterTargetCount = uploadDataFileList.size();
-			for (int i = 0; i < converterTargetCount; i++) {
+			for (int i = 0; i <= converterTargetCount; i++) {//====将原先i<converterTargetCount改为i <= converterTargetCount===》ltw---2023.5.15
 
 				UploadDataFile uploadDataFile = uploadDataFileList.get(i);
 
-				// 3. convert job file 하나씩 등록. 변환 상태를 ready(준비)로 등록.
+				// 3. convert job file 逐个注册。将转换状态注册为“就绪”。
 				ConverterJobFile converterJobFile = new ConverterJobFile();
 				converterJobFile.setUserId(userId);
 				converterJobFile.setConverterJobId(converterJobId);
@@ -164,15 +164,15 @@ public class ConverterServiceImpl implements ConverterService {
 				converterJobFile.setUserId(userId);
 				converterJobFile.setUsf(usf);
 				converterJobFile.setStatus(ConverterJobStatus.READY.getValue());
-				converterMapper.insertConverterJobFile(converterJobFile);
+				converterMapper.insertConverterJobFile(converterJobFile);//文件信息入库
 
-				// 왜 마지막에만 Queue를 실행하나요?
+				// 为什么我只在最后一个运行 Queue？
 				if (i == converterTargetCount - 1) {
-					// 4. queue 를 실행
+					// 4. queue 运行
 					executeConverter(userId, dataGroupRootPath, inConverterJob, uploadDataFile);
 				}
 
-				// 5. 데이터를 등록 혹은 갱신. 상태를 use(사용중)로 등록.
+				// 5. 注册或更新数据。将状态注册为use(使用中)。
 				// DataInfo dataInfo = upsertData(userId, converterJobId, converterTargetCount, uploadDataFile);
 
 				// 6. 데이터 그룹 신규 생성의 경우 데이터 건수 update -
@@ -254,7 +254,7 @@ public class ConverterServiceImpl implements ConverterService {
 
 
 	/**
-	 * 로그파일을 통한 데이터 변환 작업 상태를 갱신
+	 * 更新通过日志文件的数据转换作业状态
 	 * @param converterResultLog converterResultLog
 	 */
 	@Transactional
@@ -291,10 +291,10 @@ public class ConverterServiceImpl implements ConverterService {
 			if (ConverterJobResultStatus.SUCCESS == conversionJobResult.getResultStatus()) {
 				// 상태가 성공인 경우
 
-				// 데이터를 등록 혹은 갱신. 상태를 use(사용중)로 등록.
+				// 注册或更新数据。注册状态为使用 (使用中)。
 				DataInfo dataInfo = upsertData(userId, converterJobId, converterTargetCount, uploadDataFile);
 
-				// 데이터 그룹 신규 생성의 경우 데이터 건수 update
+				// 新数据组创建的数据编号更新
 				// location_update_type 이 auto 일 경우 dataInfo 위치 정보로 dataGroup 위치 정보 수정
 				updateDataGroup(userId, dataInfo, uploadDataFile);
 
@@ -347,10 +347,10 @@ public class ConverterServiceImpl implements ConverterService {
 
 		Long converterJobId = inConverterJob.getConverterJobId();
 
-		// path 와 File.seperator 의 차이점 때문에 변환
+		// path和file。由于seperator的差异而转换
 		String dataGroupFilePath = FileUtils.getFilePath(dataGroup.getDataGroupPath());
 
-		// 로그파일을 ConverterJobId로 분리하여 쓰도록 수정
+		// 修改为将日志文件分离为ConverterJobId
 		String makedDirectory = FileUtils.makeDirectory(userId, UploadDirectoryType.YEAR_MONTH, propertiesConfig.getDataConverterLogDir());
 		String logFilePath = makedDirectory + "logTest_" + converterJobId + ".txt";
 
@@ -386,8 +386,8 @@ public class ConverterServiceImpl implements ConverterService {
 		queueMessage.setSkinLevel(template.getSkinLevel());
 
 		// TODO
-		// 조금 미묘하다. transaction 처리를 할지, 관리자 UI 재 실행을 위해서는 여기가 맞는거 같기도 하고....
-		// 별도 기능으로 분리해야 하나?
+		// 有点微妙。是进行transaction处理，还是重新执行管理者UI，这里似乎是正确的....
+		// 需要分离成独立的功能吗?
 		try {
 			aMQPPublishService.send(queueMessage);
 		} catch(AmqpException e) {
@@ -403,7 +403,7 @@ public class ConverterServiceImpl implements ConverterService {
 
 
 	/**
-	 * 로그파일을 통한 데이터 변환 작업 상태를 갱신
+	 * 更新通过日志文件的数据转换作业状态
 	 * @param converterJob	converterJob
 	 * @param converterResultLog	converterResultLog
 	 */
@@ -422,7 +422,7 @@ public class ConverterServiceImpl implements ConverterService {
 	}
 
 	/**
-	 * 위치파일(LonsLats.json)을 통한 데이터 Longitude, Latitude 갱신
+	 * 通过LonsLats.json更新数据Longitude和Latitude
 	 * (CityGML, IndoorGML 파일에 한함)
 	 * @param converterLocation	converterLocation
 	 * @param updateDataInfo	updateDataInfo
@@ -460,7 +460,7 @@ public class ConverterServiceImpl implements ConverterService {
 
 	/**
 	 * TODO 현재는 converterJob 과 dataInfo 가 1:1 의 관계여서 converterJobId를 받지만, 나중에는 converterJobFileId 를 받아야 함
-	 * dataKey가 존재하지 않을 경우 insert, 존재할 경우 update
+	 * 如果dataKey不存在，则插入，如果存在，则更新
 	 * @param userId	userId
 	 * @param uploadDataFile	uploadDataFile
 	 */

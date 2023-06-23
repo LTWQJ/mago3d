@@ -22,7 +22,7 @@ public class DataLogServiceImpl implements DataLogService {
 	private DataLogMapper dataLogMapper;
 	
 	/**
-	 * Data 변경 요청 수
+	 * Data 更改请求数
 	 * @param dataInfoLog
 	 * @return
 	 */
@@ -32,7 +32,7 @@ public class DataLogServiceImpl implements DataLogService {
 	}
 	
 	/**
-	 * 데이터 변경 요청 로그
+	 * 数据更改请求日志
 	 * @param dataInfoLog
 	 * @return
 	 */

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * 데이터 포맷을 처리
+ * 处理数据格式
  * @author jeongdae
  *
  */
@@ -18,7 +18,7 @@ public class FormatUtils {
 	public static final SimpleDateFormat viewDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	/**
-	 * 년월일 시간분초 까지 표시
+	 * 显示至年月日时间的秒
 	 * @param date
 	 * @return
 	 */
@@ -27,7 +27,7 @@ public class FormatUtils {
 	}
 
 	/**
-	 * 입력 받은 패턴으로 표시
+	 * 以输入接收模式显示
 	 * @param date
 	 * @param pattern
 	 * @return

@@ -125,7 +125,7 @@
 <!--         LIMIT 1 -->
 <!--     </select> -->
 
-    <!-- 레이어 테이블의 컬럼 타입이 어떤 geometry 타입인지를 구함 -->
+    <!-- 图层表的评论类型是什么 -->
     <select id="getGeometryType" parameterType="string" resultType="string">
         /* getGeometryType */
         SELECT ST_GeometryType(wkb_geometry) AS geometryType

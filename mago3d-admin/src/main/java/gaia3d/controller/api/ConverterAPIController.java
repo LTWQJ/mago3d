@@ -34,7 +34,6 @@ public class ConverterAPIController {
     public ResponseEntity<ConverterJob> status(@RequestBody ConverterJob converterJob,
                                                @PathVariable("converterJobId") Long converterJobId,
                                                HttpServletRequest request, HttpServletResponse response) {
-
         HttpStatus statusCode = HttpStatus.OK;
         String errorCode = null;
         String message = null;

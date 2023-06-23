@@ -18,9 +18,9 @@ public class ExampleValidator {
 //			errors.reject("cbiid", null, "test-----------");
 //			errors.rejectValue("cbiid", "cbiid.require", messageSource.getMessage("cbiid.require", null, Locale.KOREAN));
 			
-			errors.reject("userGroupId", "[Global Error] 숫자만 입력 가능 합니다.");
+			errors.reject("userGroupId", "[Global Error] 只能输入数字。");
 			
-			errors.rejectValue("userGroupId", "숫자만 입력 가능 합니다.");
+			errors.rejectValue("userGroupId", "只能输入数字。");
 		}
 		
 //		if(catalogInfoDto.getDatasetid().isEmpty()) {

@@ -94,7 +94,7 @@ public class DataLogController {
 	}
 		
 	/**
-	 * 검색 조건
+	 * 搜索条件
 	 * @param pageType
 	 * @param dataInfoLog
 	 * @return

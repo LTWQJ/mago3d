@@ -47,8 +47,8 @@ import gaia3d.utils.FileUtils;
 import gaia3d.utils.FormatUtils;
 
 /**
- * 3D 데이터 파일 업로더
- * TODO 설계 파일 안의 texture 의 경우 설계 파일에서 참조하는 경우가 있으므로 이름 변경 불가.
+ * 3D数据文件上传者
+ * TODO 对于设计文件中的 texture ，无法重命名，因为设计文件可能会引用它。
  * @author jeongdae
  *
  */
@@ -57,7 +57,7 @@ import gaia3d.utils.FormatUtils;
 @RequestMapping("/upload-datas")
 public class UploadDataRestController {
 	
-	// 파일 copy 시 버퍼 사이즈
+	// 文件 copy 时的缓冲区大小
 	public static final int BUFFER_SIZE = 8192;
 	
 	@Autowired
@@ -70,8 +70,8 @@ public class UploadDataRestController {
 	private UploadDataService uploadDataService;
 	
 	/**
-	 * TODO 비동기로 처리해야 할듯
-	 * data upload 처리
+	 * TODO 需要异动处理
+	 * data upload 处理
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -83,36 +83,37 @@ public class UploadDataRestController {
 		String message = null;
 		String dataType = request.getParameter("dataType");
 		
-		// converter 변환 대상 파일 수
+		// converter 要转换的文件数
 		int converterTargetCount = 0;
 		
 		Policy policy = policyService.getPolicy();
-		// 여긴 null 체크를 안 하는게 맞음. 없음 장애가 나야 함
-		// 업로딩 가능한 파일 타입
+		// 这里不进行null检查是正确的。 不能有任何混乱
+		// 可以上传的文件类型
 		String[] uploadTypes = policy.getUserUploadType().toLowerCase().split(",");
-		// 변환 가능한 파일 타입
+		// 可转换文件类型
 		String[] converterTypes = policy.getUserConverterType().split(",");
 		List<String> uploadTypeList = Arrays.asList(uploadTypes);
 		List<String> converterTypeList = Arrays.asList(converterTypes);
-		
+
 		errorCode = dataValidate(request);
 		if(!StringUtils.isEmpty(errorCode)) return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
-		
+
 		UserSession userSession = (UserSession)request.getSession().getAttribute(Key.USER_SESSION.name());
 		String userId = userSession.getUserId();
 		List<UploadDataFile> uploadDataFileList = new ArrayList<>();
 		Map<String, MultipartFile> fileMap = request.getFileMap();
-		
+//
 		Map<String, Object> uploadMap = null;
 		String today = DateUtils.getToday(FormatUtils.YEAR_MONTH_DAY_TIME14);
-		
-		// 1 directory 생성
+
+		// 1 创建文件夹
 		String makedDirectory = FileUtils.makeDirectory(userId, UploadDirectoryType.YEAR_MONTH, propertiesConfig.getDataUploadDir());
 		log.info("@@@@@@@ = {}", makedDirectory);
-		
-		// 2 한건이면서 zip 의 경우
+//
+		// 2 虽然只有一件，但对于zip来说
 		boolean isZipFile = false;
 		int fileCount = fileMap.values().size();
+//		如果文件数==1，执行下面语句
 		if(fileCount == 1) {
 			// processAsync(policy, userId, fileMap, makedDirectory);
 			for (MultipartFile multipartFile : fileMap.values()) {
@@ -120,59 +121,59 @@ public class UploadDataRestController {
 				String fileExtension = divideNames[divideNames.length - 1];
 				if(UploadData.ZIP_EXTENSION.equalsIgnoreCase(fileExtension)) {
 					isZipFile = true;
-					// zip 파일
+					// zip 文件
 					uploadMap = unzip(policy, uploadTypeList, converterTypeList, today, userId, multipartFile, makedDirectory, dataType);
 					log.info("@@@@@@@ uploadMap = {}", uploadMap);
-					
+
 					// validation 체크
 					if(uploadMap.containsKey("errorCode")) {
 						errorCode = (String)uploadMap.get("errorCode");
 						return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
 					}
-					
-					// converter 변환 대상 파일 수
+
+					// converter 要转换的文件数
 					converterTargetCount = (Integer)uploadMap.get("converterTargetCount");
 					if(converterTargetCount <= 0) {
 						errorCode = "converter.target.count.invalid";
 						return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
 					}
-					
+
 					uploadDataFileList = (List<UploadDataFile>)uploadMap.get("uploadDataFileList");
 				}
 			}
 		}
-		
+//
 		if(!isZipFile) {
-			// zip 파일이 아니면 기본적으로 한 폴더에 넣어야 함
-			
+			//如果不是 zip 文件，则默认情况下必须将其放在一个文件夹中
+
 			Map<String, String> fileNameMatchingMap = new HashMap<>();
 			String tempDirectory = userId + "_" + System.nanoTime();
-			// 파일을 upload 디렉토리로 복사
+			// 将文件复制到 upload 目录
 			FileUtils.makeDirectory(makedDirectory + tempDirectory);
-			// 3 그 외의 경우는 재귀적으로 파일 복사
+			// 3 在其他情况下，递归复制文件
 			for (MultipartFile multipartFile : fileMap.values()) {
 				log.info("@@@@@@@@@@@@@@@ name = {}, originalName = {}", multipartFile.getName(), multipartFile.getOriginalFilename());
-				
+
 				UploadDataFile uploadDataFile = new UploadDataFile();
 				Boolean converterTarget = false;
-				
-				// 파일 기본 validation 체크
+
+				// 检查文件默认 validation
 				errorCode = fileValidate(policy, uploadTypeList, multipartFile);
 				if(!StringUtils.isEmpty(errorCode)) {
 					return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
 				}
-				
+
 				String originalName = multipartFile.getOriginalFilename();
 				String[] divideFileName = originalName.split("\\.");
     			String saveFileName = originalName;
-    			
+
     			// validation
     			if(divideFileName == null || divideFileName.length == 0) {
     				log.info("@@@@@@@@@@@@ upload.file.type.invalid. originalName = {}", originalName);
     				errorCode = "upload.file.type.invalid";
     				return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
     			}
-				
+
     			String extension = divideFileName[divideFileName.length - 1];
     			// !extList.contains(extension.toLowerCase())
 				if(UploadData.ZIP_EXTENSION.equalsIgnoreCase(extension) || !uploadTypeList.contains(extension.toLowerCase())) {
@@ -180,59 +181,59 @@ public class UploadDataRestController {
 					errorCode = "upload.file.type.invalid";
 					return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
 				}
-				
-				// 매칭 되는 파일 이름이 있는 경우, 그대로 사용
+
+				// 如果存在匹配的文件名，请按原样使用
 				String searchfileNameKey = originalName.substring(0, originalName.length() - extension.length() - 1);
 				String sameFileName = fileNameMatchingMap.get(searchfileNameKey);
-				// 변환 대상 파일
+				// 要转换的文件
 				if(converterTypeList.contains(extension.toLowerCase())) {
 					if(!dataType.equalsIgnoreCase(extension)) {
-						// 데이터 타입과 업로딩 파일 확장자가 같지 않고
-						if(	UploadDataType.CITYGML == UploadDataType.findBy(dataType)
-								&& UploadDataType.GML.getValue().equalsIgnoreCase(extension)){
-							// 데이터 타입은 citygml 인데 확장자는 gml 인 경우 통과
-						} else if(UploadDataType.INDOORGML == UploadDataType.findBy(dataType)
-								&& UploadDataType.GML.getValue().equalsIgnoreCase(extension)) {
-							// 데이터 타입은 indoorgml 인데 확장자는 gml 인 경우 통과
-						} else {
-							// 전부 예외
-							log.info("@@@@@@@@@@@@ datatype = {}, extension = {}", dataType, extension);
-							errorCode = "upload.file.type.invalid";
-	    					return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
-						}
+							// 数据类型和上传文件扩展名不相等，
+							if(	UploadDataType.CITYGML == UploadDataType.findBy(dataType)
+									&& UploadDataType.GML.getValue().equalsIgnoreCase(extension)){
+								// 数据类型为 citygml，如果扩展名为 gml，则通过
+							} else if(UploadDataType.INDOORGML == UploadDataType.findBy(dataType)
+									&& UploadDataType.GML.getValue().equalsIgnoreCase(extension)) {
+								// 据类型为 indoorgml，如果扩展名为 gml，则通过
+							} else {
+								// 全部例外
+								log.info("@@@@@@@@@@@@ datatype = {}, extension = {}", dataType, extension);
+								errorCode = "upload.file.type.invalid";
+								return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
+							}
 					}
-					
+//代码运行时注释=====》ltw
 					if(UploadDataType.CITYGML == UploadDataType.findBy(dataType) && UploadDataType.INDOORGML == UploadDataType.findBy(extension)) {
-						// 전부 예외
-						log.info("@@@@@@@@@@@@ 데이터 타입이 다른 경우. datatype = {}, extension = {}", dataType, extension);
+						// 全部例外
+						log.info("@@@@@@@@@@@@ 数据类型不同时. datatype = {}, extension = {}", dataType, extension);
 						errorCode = "file.ext.invalid";
 						return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
 					}
-					
+
 					if (UploadDataType.CITYGML.getValue().equalsIgnoreCase(dataType) && UploadDataType.GML.getValue().equalsIgnoreCase(extension)) {
 						extension = UploadDataType.CITYGML.getValue();
 					} else if (UploadDataType.INDOORGML.getValue().equalsIgnoreCase(dataType) && UploadDataType.GML.getValue().equalsIgnoreCase(extension)) {
 						extension = UploadDataType.INDOORGML.getValue();
 					}
-					
-					// 변환 대상 파일만 이름을 변경하고 나머지 파일은 그대로 이름 유지
+
+					// 仅重命名要转换的文件，并保留其余文件的名称
 					saveFileName = userId + "_" + today + "_" + System.nanoTime() + "." + extension;
-					
+
 					converterTarget = true;
 					converterTargetCount++;
-				} 
-				
+				}
+
 				long size = 0L;
 				try (	InputStream inputStream = multipartFile.getInputStream();
 						OutputStream outputStream = new FileOutputStream(makedDirectory + tempDirectory + File.separator + saveFileName)) {
-				
+
 					int bytesRead = 0;
 					byte[] buffer = new byte[BUFFER_SIZE];
 					while ((bytesRead = inputStream.read(buffer, 0, BUFFER_SIZE)) != -1) {
 						size += bytesRead;
 						outputStream.write(buffer, 0, bytesRead);
 					}
-				
+
 					uploadDataFile.setFileType(FileType.FILE.name());
 					uploadDataFile.setFileExt(extension);
         			uploadDataFile.setFileName(multipartFile.getOriginalFilename());
@@ -253,16 +254,16 @@ public class UploadDataRestController {
 				uploadDataFileList.add(uploadDataFile);
 			}
 		}
-		
-		if(converterTargetCount <= 0) {
-			log.info("@@@@@@@@@@@@ converterTargetCount = {}", converterTargetCount);
-			result.put("statusCode", HttpStatus.BAD_REQUEST.value());
-			result.put("errorCode", "converter.target.count.invalid");
-			result.put("message", message);
-            
-			return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
-		}
-
+//============数据转换数判断----问题就出现在这个位置----注释掉这段代码数据可入库==》ltw--2023.5.11
+//		if(converterTargetCount <= 0) {
+//			log.info("@@@@@@@@@@@@ converterTargetCount = {}", converterTargetCount);
+//			result.put("statusCode", HttpStatus.BAD_REQUEST.value());
+//			result.put("errorCode", "converter.target.count.invalid");
+//			result.put("message", message);
+//
+//			return getResultMap(result, HttpStatus.BAD_REQUEST.value(), errorCode, message);
+//		}
+//================================================================================================
 		UploadData uploadData = new UploadData();
 		uploadData.setDataName(request.getParameter("dataName"));
 		uploadData.setDataGroupId(Integer.valueOf(request.getParameter("dataGroupId")));
@@ -270,7 +271,7 @@ public class UploadDataRestController {
 		uploadData.setDataType(dataType);
 		uploadData.setUserId(userId);
 		uploadData.setHeightReference(request.getParameter("heightReference"));
-		// citygml 인 경우 converter 에서 자동 추출
+		// 如果是citygml，从converter中自动提取
 		if(	UploadDataType.CITYGML != UploadDataType.findBy(dataType) && UploadDataType.LAS != UploadDataType.findBy(dataType)) {
 			uploadData.setLongitude(new BigDecimal(request.getParameter("longitude")) );
 			uploadData.setLatitude(new BigDecimal(request.getParameter("latitude")) );
@@ -283,7 +284,9 @@ public class UploadDataRestController {
 		uploadData.setDescription(request.getParameter("description"));
 		
 		log.info("@@@@@@@@@@@@ uploadData = {}", uploadData);
-		uploadDataService.insertUploadData(uploadData, uploadDataFileList);       
+		System.out.println("测试");
+//		上述过程走完，将赋好值的uploadData,uploadDataFileList传入数据库操作函数
+		uploadDataService.insertUploadData(uploadData, uploadDataFileList);
 		int statusCode = HttpStatus.OK.value();
 		
 		result.put("statusCode", statusCode);
@@ -293,7 +296,7 @@ public class UploadDataRestController {
 	}
 	
 	/**
-	 * 업로딩 파일을 압축 해제
+	 * 解压缩上传文件
 	 * @param policy
 	 * @param uploadTypeList
 	 * @param converterTypeList
@@ -314,7 +317,7 @@ public class UploadDataRestController {
 										String dataType) throws Exception {
 		
 		Map<String, Object> result = new HashMap<>();
-		// converter 변환 대상 파일 수
+		// converter 要转换的文件数
 		int converterTargetCount = 0;
 		
 		String errorCode = fileValidate(policy, uploadTypeList, multipartFile);
@@ -519,7 +522,7 @@ public class UploadDataRestController {
 	}
 	
 	/*
-	 * unzip 로직 안에서 파일 복사
+	 * unzip 从逻辑复制文件
 	 */
 	private UploadDataFile fileCopyInUnzip(UploadDataFile uploadDataFile, ZipFile zipFile, ZipEntry entry, String directoryPath, String saveFileName,
 									String extension, String fileName, String subDirectoryPath, int depth) {
@@ -563,7 +566,7 @@ public class UploadDataRestController {
 	 */
 	private static String fileValidate(Policy policy, List<String> extList, MultipartFile multipartFile) {
 		
-		// 2 파일 이름
+		// 2 文件名
 		String fileName = multipartFile.getOriginalFilename();
 		if(fileName == null) {
 			log.info("@@ fileName is null");
@@ -615,7 +618,7 @@ public class UploadDataRestController {
 	}
 	
 	/**
-	 * 업로드 데이트 수정
+	 * 修改上传日期
 	 * @param request
 	 * @param uploadData
 	 * @param bindingResult
@@ -675,8 +678,8 @@ public class UploadDataRestController {
 		uploadData.setLocation("POINT(" + uploadData.getLongitude() + " " + uploadData.getLatitude() + ")");
 		//uploadDataService.updateUploadData(uploadData);
 		
-		// 원본이 gml 파일일 경우, 데이터 타입을 citygml/indoorgml로 변경할 경우에 DB를 갱신하고 업로드 된 경로의 파일 확장자를 변경.
-		// DB 갱신과 파일 확장자 변경
+		//如果源是 gml 文件，则更新数据库，如果将数据类型更改为 citygmlindoorgml，则更改上载路径的文件扩展名。
+		// 更新数据库并更改文件扩展名
 		uploadDataService.updateUploadDataAndFile(uploadData);
 		int statusCode = HttpStatus.OK.value();
 			
@@ -687,7 +690,7 @@ public class UploadDataRestController {
 	}
 
 	/**
-	 * 선택 upload-data 삭제
+	 * 删除选择 upload-data
 	 * @param request
 	 * @param uploadDataId
 	 * @return

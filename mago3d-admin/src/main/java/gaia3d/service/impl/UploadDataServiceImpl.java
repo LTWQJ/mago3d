@@ -28,7 +28,7 @@ public class UploadDataServiceImpl implements UploadDataService {
 	private UploadDataMapper uploadDataMapper;
 	
 	/**
-	 * 업로딩 데이터 총 건수
+	 * 上传数据总数
 	 * @param uploadData
 	 * @return
 	 */
@@ -98,7 +98,7 @@ public class UploadDataServiceImpl implements UploadDataService {
 	}
 
 	/**
-	 * 업로드 데이터 타입 집계
+	 * 拼贴上传数据类型
 	 * @return
 	 */
 	@Transactional(readOnly=true)
@@ -107,7 +107,7 @@ public class UploadDataServiceImpl implements UploadDataService {
 	}
 	
 	/**
-	 * 사용자 파일 정보 업로딩
+	 * 用户文件信息上传
 	 * @param uploadData
 	 * @param uploadDataFileList
 	 * @return
@@ -131,7 +131,7 @@ public class UploadDataServiceImpl implements UploadDataService {
 	}
 	
 	/**
-	 * 사용자 파일 정보 수정
+	 * 用户文件信息更正
 	 * @param uploadData
 	 * @return
 	 */
@@ -173,6 +173,7 @@ public class UploadDataServiceImpl implements UploadDataService {
 	public int updateUploadDataAndFile(UploadData uploadData) {
 		int result = 0;
 		try {
+//			修改上传文件的upload_data表数据
 			result = uploadDataMapper.updateUploadData(uploadData);
 			if (result > 0) {
 				List<UploadDataFile> uploadDataFileList = uploadDataMapper.getListUploadDataFile(uploadData);
@@ -184,20 +185,19 @@ public class UploadDataServiceImpl implements UploadDataService {
 					String[] fileNameValues = fileName.split("\\.");
 					String extension = fileNameValues[fileNameValues.length - 1];
 					
-					// 원본이 gml 파일이고 데이터 타입을 citygml 혹은 indoorgml로 처음 등록과 다르게 변경하는 경우 
+					// 如果源是 gml 文件，且数据类型更改为与首次注册为 citygml 或 indoorgml 不同的更改。
 					if (UploadDataType.GML.getValue().equalsIgnoreCase(extension) && !uploadData.getDataType().equalsIgnoreCase(uploadExt)) {
 						String originalFileName = uploadDataFile.getFileRealName();
 						String updateFileName = originalFileName.replace(uploadExt, uploadData.getDataType());
 						
 						uploadDataFile.setFileExt(uploadData.getDataType());
 						uploadDataFile.setFileRealName(updateFileName);
-						
-						// DB를 갱신
+						// 更新upload_data_file表数据
 						result += uploadDataMapper.updateUploadDataFile(uploadDataFile);
 						File uploadFile = Paths.get(uploadDataFile.getFilePath(), originalFileName).toFile();
 						
 						if (uploadFile.exists()) {
-							// 파일 확장자를 변경.
+							// 如果上传的文件存在就更改文件扩展名。
 							uploadFile.renameTo(Paths.get(uploadDataFile.getFilePath(), updateFileName).toFile());
 						}
 					}

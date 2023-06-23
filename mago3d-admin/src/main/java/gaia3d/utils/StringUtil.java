@@ -11,7 +11,7 @@ public class StringUtil {
 	}
 	
 	/**
-	 * 입력 값이 숫자인지를 판단
+	 * 确定输入值是否为数字
 	 * @param value
 	 * @return
 	 */

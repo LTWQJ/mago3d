@@ -7,8 +7,8 @@ package gaia3d.domain;
  */
 public enum ServerTarget {
 
-	// 사용자에서 호출한 경우
+	// 由用户调用
 	USER,
-	// 관리자에서 호출한 경우
+	// 从管理员调用
 	ADMIN;
 }

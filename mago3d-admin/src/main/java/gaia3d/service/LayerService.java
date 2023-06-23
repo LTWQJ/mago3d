@@ -10,61 +10,61 @@ import gaia3d.domain.LayerFileInfo;
 public interface LayerService {
 
 	/**
-	 * Layer 总件数
+	 * Layer 총 건수
 	 * @param accessLog
 	 * @return
 	 */
 	Long getLayerTotalCount(Layer layer);
 	
     /**
-    * layer 目录
+    * layer 목록
     * @return
     */
     List<Layer> getListLayer(Layer layer);
     
     /**
-     * 查询geoserver注册的图层列表
+     * geoserver에 등록된 레이어 목록 조회 
      * @return
      */
     String getListGeoserverLayer(GeoPolicy geoPolicy);
 
     /**
-    * 获取layer的资料
+    * layer 정보 취득
     * @param layerId
     * @return
     */
     Layer getLayer(Integer layerId);
     
     /**
-     * layerKey重复检查
+     * layerKey 중복 체크 
      * @param layerKey
      * @return
      */
     Boolean isLayerKeyDuplication(String layerKey);
     
     /**
-    * 图层表的评论类型是什么
+    * 레이어 테이블의 컬럼 타입이 어떤 geometry 타입인지를 구함
     * @param layerKey
     * @return
     */
     String getGeometryType(String layerKey);
 
     /**
-     * 查询图层的评论目录
+     * 레이어의 칼럼 목록을 조회 
      * @param layerKey
      * @return
      */
     String getLayerColumn(String layerKey);
 
     /**
-    * 图层注册
+    * 레이어 등록
     * @param layer
     * @return
     */
     Map<String, Object> insertLayer(Layer layer, List<LayerFileInfo> layerFileInfoList);
 
     /**
-    * 利用shape文件修正layer信息
+    * shape 파일을 이용한 layer 정보 수정
     * @param layer
     * @param isLayerFileInfoExist
     * @param layerFileInfoList
@@ -74,7 +74,7 @@ public interface LayerService {
     Map<String, Object> updateLayer(Layer layer, boolean isLayerFileInfoExist, List<LayerFileInfo> layerFileInfoList);
 
     /**
-    * ogr2ogr实行
+    * Ogr2Ogr 실행
     * @param layer
     * @param isLayerFileInfoExist
     * @param shapeFileName
@@ -84,14 +84,14 @@ public interface LayerService {
     void insertOgr2Ogr(Layer layer, boolean isLayerFileInfoExist, String shapeFileName, String shapeEncoding) throws Exception;
 
     /**
-     * 根据数据库信息更新shp文件
+     * shp파일 정보를 db정보를 기준으로 갱신
      * @param version
      * @return
      */
     void exportOgr2Ogr(LayerFileInfo layerFileInfo, Layer layer) throws Exception;
     
     /**
-    * 如果layer未注册，则使用rest api注册layer
+    * layer 가 등록 되어 있지 않은 경우 rest api 를 이용해서 layer를 등록
      * @param geoPolicy
      * @param layerKey
      * @throws Exception
@@ -99,14 +99,14 @@ public interface LayerService {
     void registerLayer(GeoPolicy geoPolicy, String layerKey) throws Exception;
     
     /**
-	 * 修正图层的风格信息
+	 * 레이어의 스타일 정보를 수정
 	 * @param layer
 	 * @return
 	 */
 	int updateLayerStyle(Layer layer) throws Exception;
 
     /**
-    * 图层回滚处理
+    * 레이어 롤백 처리
     * @param layer
     * @param isLayerFileInfoExist
     * @param layerFileInfo
@@ -115,7 +115,7 @@ public interface LayerService {
     void rollbackLayer(Layer layer, boolean isLayerFileInfoExist, LayerFileInfo layerFileInfo, Integer deleteLayerFileInfoGroupId);
 
     /**
-    * 用这个shape文件激活layer
+    * layer 를 이 shape 파일로 활성화
     * @param layerId
     * @param layerFileInfoGroupId
     * @param layerFileInfoId
@@ -124,7 +124,7 @@ public interface LayerService {
     int updateLayerByLayerFileInfoId(Integer layerId, Integer layerFileInfoGroupId, Integer layerFileInfoId);
 
      /**
-    * 删除图层
+    * 레이어 삭제
     * @param layerId
     * @return
     */

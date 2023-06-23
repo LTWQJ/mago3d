@@ -113,7 +113,7 @@ values
     (1003, '1', '0', '模拟', 'SIMULATION', 1003, 0, 1, 1, 3, '/simulation', null, 'simulationMenu', 'simulationContent', 'simulation', 'Y', 'Y', 'Y'),
     (1004, '1', '0', 'IOT', 'IOT', 1004, 0, 1, 1, 4, '/iot', null, 'iotMenu', 'iotContent', 'iot', 'Y', 'Y', 'Y'),
     (1005, '1', '0', '分析', 'ANALYSIS', 1005, 0, 1, 1, 5, '/spatial', null, 'spatialMenu', 'spatialContent', 'spatial', 'Y', 'Y', 'Y'),
---     (1006, '1', '0', '레이어', 'LAYER', 1006, 0, 1, 1, 6, '/layer/list', null, 'layerMenu', 'layerContent', 'layer', 'Y', 'Y', 'Y'),
+   (1006, '1', '0', '图层', 'LAYER', 1006, 0, 1, 1, 6, '/layer/list', null, 'layerMenu', 'layerContent', 'layer', 'Y', 'Y', 'Y'),
     (1007, '1', '0', '我的网页', 'MYPAGE', 1007, 0, 1, 1, 7, '/mypage/user-modify', null, 'mypageMenu', 'mypageContent', 'mypagePolicy', 'Y', 'Y', 'Y');
 
 

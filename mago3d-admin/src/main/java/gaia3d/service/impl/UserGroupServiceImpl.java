@@ -32,7 +32,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 	private UserService userService;
 
 	/**
-     * 사용자 그룹 목록
+     * 用户组列表
      * @return
      */
 	@Transactional(readOnly = true)
@@ -41,7 +41,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 	}
 
 	/**
-     * 사용자 그룹 정보 조회
+     * 查看用户组信息
      * @return
      */
 	@Transactional(readOnly = true)
@@ -50,7 +50,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 	}
 
 	/**
-     * 기본 사용자 그룹 정보 조회
+     * 查看默认用户组信息
      * @return
      */
 	@Transactional(readOnly = true)
@@ -59,7 +59,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 	}
 
     /**
-	 * 사용자 그룹 메뉴 권한 목록
+	 * 用户组菜单权限列表
 	 * @param userGroupMenu
 	 * @return
 	 */

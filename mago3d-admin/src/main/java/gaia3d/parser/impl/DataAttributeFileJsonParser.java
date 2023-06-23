@@ -25,7 +25,7 @@ public class DataAttributeFileJsonParser implements DataAttributeFileParser {
 			parseSuccessCount++;
 		} catch (IOException e) {
 			parseErrorCount++;
-			throw new RuntimeException("Data 속성 파일 파싱 오류! message = " + e.getMessage());
+			throw new RuntimeException("Data解析属性文件错误! message = " + e.getMessage());
 		}
 		
 		Map<String, Object> result = new HashMap<>();

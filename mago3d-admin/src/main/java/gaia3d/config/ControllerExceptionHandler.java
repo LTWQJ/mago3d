@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import gaia3d.support.LogMessageSupport;
 
 /**
- * Controller Exception 처리
+ * Controller Exception 处理
  * @author Cheon JeongDae
  *
  */
@@ -26,8 +26,8 @@ public class ControllerExceptionHandler {
 		LogMessageSupport.printMessage(exception);
 		
 		ModelAndView mav = new ModelAndView();
-	    mav.addObject("exception", exception);
-	    mav.setViewName("/error/error");
+	    mav.addObject("exception", exception);//添加数据
+	    mav.setViewName("/error/error");//设置前端访问的视图接口
 	    return mav;
 	}
 

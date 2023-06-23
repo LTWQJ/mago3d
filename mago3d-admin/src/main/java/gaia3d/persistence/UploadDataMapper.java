@@ -10,21 +10,21 @@ import java.util.List;
 public interface UploadDataMapper {
 
 	/**
-	 * 업로딩 데이터 총 건수
+	 * 上传数据总数
 	 * @param uploadData
 	 * @return
 	 */
 	Long getUploadDataTotalCount(UploadData uploadData);
 	
 	/**
-	 * 업로딩 데이터 목록
+	 * 上传数据列表
 	 * @param uploadData
 	 * @return
 	 */
 	List<UploadData> getListUploadData(UploadData uploadData);
 	
 	/**
-	 * 업로딩 정보
+	 * 上传信息
 	 * @param uploadData
 	 * @return
 	 */
@@ -79,7 +79,7 @@ public interface UploadDataMapper {
 	int insertUploadDataFile(UploadDataFile uploadDataFile);
 	
 	/**
-	 * 사용자 파일 정보 수정
+	 * 修改用户文件信息
 	 * @param uploadData
 	 * @return
 	 */

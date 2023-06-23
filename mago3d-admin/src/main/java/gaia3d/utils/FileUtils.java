@@ -10,9 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO N중화 처리를 위해 FTP 로 다른 PM 으로 전송해 줘야 하는데....
+ * TODO N 需要用 FTP 将其传输到另一个 PM 进行中和处理....
  * 
- * 파일 처리 관련 Util
+ * 与文件处理相关的 Util
  * @author jeongdae
  *
  */
@@ -25,52 +25,52 @@ public class FileUtils {
 	 * 
 	 */
 	
-	// 디렉토리 생성 방법 
+	// 要创建目录，请执行以下操作：
 	public static final int SUBDIRECTORY_YEAR = 1;
 	public static final int SUBDIRECTORY_YEAR_MONTH = 2;
 	public static final int SUBDIRECTORY_YEAR_MONTH_DAY = 3;
 	
-	// 사용자 일괄 등록
+	// 成批用户
 	public static final String USER_FILE_UPLOAD = "USER_FILE_UPLOAD";
-	// Data 일괄 등록
+	// 数据成批注册
 	public static final String DATA_FILE_UPLOAD = "DATA_FILE_UPLOAD";
-	// Smart Tiling Data 일괄 등록
+	// 批量注册智能时间数据
 	public static final String DATA_SMART_TILING_FILE_UPLOAD = "DATA_SMART_TILING_FILE_UPLOAD";
-	// Issue 등록
+	// Issue注册
 	public static final String ISSUE_FILE_UPLOAD = "ISSUE_FILE_UPLOAD";
 	// Data Attribute
 	public static final String DATA_ATTRIBUTE_UPLOAD = "DATA_ATTRIBUTE_UPLOAD";
 	// Data Object Attribute
 	public static final String DATA_OBJECT_ATTRIBUTE_UPLOAD = "DATA_OBJECT_ATTRIBUTE_UPLOAD";
 	
-	// 사용자 일괄 등록의 경우 허용 문서 타입
+	// 对于用户成批注册，允许单据类型
 	public static final String[] USER_FILE_TYPE = {"xlsx", "xls"};
-	// 데이터 일괄 등록 문서 타입
+	// 数据成批增加单据类型
 	public static final String[] DATA_FILE_TYPE = {"xlsx", "xls", "json", "txt"};
-	// Smart Tiling 데이터 일괄 등록 문서 타입
+	// Smart Tiling 数据成批增加单据类型
 	public static final String[] DATA_SMART_TILING_FILE_TYPE = {"json", "txt"};
-	// issue 등록의 경우 허용 문서 타입
+	// issue 注册时允许的文档类型
 	public static final String[] ISSUE_FILE_TYPE = {"png", "jpg", "jpeg", "gif", "tiff", "xlsx", "xls", "docx", "doc", "pptx", "ppt"};
-	// data attribute 허용 문서 타입
+	// data attribute 允许的文档类型
 	public static final String[] DATA_ATTRIBUTE_FILE_TYPE = {"json", "txt"};
-	// data object attribute 허용 문서 타입
+	// data object attribute 允许的文档类型
 	public static final String[] DATA_OBJECT_ATTRIBUTE_FILE_TYPE = {"json", "txt"};
-	// json 파일
+	// json文件
 	public static final String EXTENSION_JSON = "json";
-	// txt 파일
+	// txt文件
 	public static final String EXTENSION_TXT = "txt";
-	// 엑셀 처리 기본 프로그램
+	// Excel 处理基本程序
 	public static final String EXCEL_EXTENSION_XLS = "xls";
-	// JEXCEL이 2007버전(xlsx) 을 읽지 못하기 때문에 POI를 병행해서 사용
+	// J并行使用 POI，因为 EXCEL 无法读取 2007 版本 （xlsx）
 	public static final String EXCEL_EXTENSION_XLSX = "xlsx";
 	
-	// 업로더 가능한 파일 사이즈(2G)
+	// 可上传的文件大小 （2G）
 	public static final long FILE_UPLOAD_SIZE = 2_000_000_000l;
-	// 파일 copy 시 버퍼 사이즈
+	// 文件 copy 时的缓冲区大小
 	public static final int BUFFER_SIZE = 8192;
 	
 	/**
-	 * 파일 업로딩 
+	 * 上传文件
 	 * @param multipartFile
 	 * @param jobType
 	 * @param directory
@@ -81,20 +81,20 @@ public class FileUtils {
 		FileInfo fileInfo = new FileInfo();
 		fileInfo.setJobType(jobType);
 		
-		// 파일 기본 validation 체크
+		// 检查文件默认 validation
 		fileInfo = fileValidation(multipartFile, fileInfo);
 		if(fileInfo.getErrorCode() != null && !"".equals(fileInfo.getErrorCode())) {
 			return fileInfo;
 		}
 		
-		// 파일을 upload 디렉토리로 복사
+		// 将文件复制到 upload 目录
 		fileInfo = fileCopy(userId, 2, multipartFile, fileInfo, directory);
 		
 		return fileInfo;
 	}
 	
 	/**
-	 * 업로딩 파일에 대한 기본적인 validation 체크. 이름, 확장자, 사이즈
+	 * 上载文件的基本价值检查。名称、 扩展名、 尺寸
 	 * @param multipartFile
 	 * @param fileInfo
 	 * @return
@@ -104,7 +104,7 @@ public class FileUtils {
 	}
 	
 	/**
-	 * 업로딩 파일에 대한 기본적인 validation 체크. 이름, 확장자, 사이즈
+	 * 上载文件的基本价值检查。名称、 扩展名、 尺寸
 	 * @param multipartFile
 	 * @param fileInfo
 	 * @return
@@ -164,8 +164,8 @@ public class FileUtils {
 			return fileInfo;
 		}
 		
-		// 4 파일 사이즈
-		// TODO data object attribute 파일은 사이즈가 커서 제한을 하지 않음
+		// 4 文件大小
+		// TODO data object attribute 文件大小较大，不限制
 		if(!DATA_OBJECT_ATTRIBUTE_UPLOAD.equals(fileInfo.getJobType())) {
 			long fileSize = multipartFile.getSize();
 			log.info("@@@@@@@@@@@ file size = {} KB", (fileSize / 1000));
@@ -187,7 +187,7 @@ public class FileUtils {
 	}
 	
 	/**
-	 * 파일 복사
+	 * 文件副本
 	 * @param multipartFile
 	 * @param fileInfo
 	 * @param targetDirectory
@@ -266,7 +266,7 @@ public class FileUtils {
 	}
 	
 	/**
-	 * 경로를 기준으로 디렉토리를 생성. window, linux 에서 File.separator 가 문제를 일으킴
+	 * 基于路径创建目录。窗口， 在 linux 上文件.separator 导致问题
 	 * @param servicePath
 	 * @param dataGroupPath
 	 * @return

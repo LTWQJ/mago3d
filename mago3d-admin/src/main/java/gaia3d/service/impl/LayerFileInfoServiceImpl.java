@@ -87,7 +87,7 @@ public class LayerFileInfoServiceImpl implements LayerFileInfoService {
 	}
 
 	/**
-	 * layer shape 修改文件信息
+	 * layer shape 파일 정보 수정
 	 * @param layerFileInfo
 	 * @return
 	 */

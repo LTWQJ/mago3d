@@ -12,6 +12,7 @@ import gaia3d.persistence.LayerMapper;
 import gaia3d.security.Crypt;
 import gaia3d.service.GeoPolicyService;
 import gaia3d.service.LayerService;
+import gaia3d.utils.Autopubgeoserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,7 @@ public class LayerServiceImpl implements LayerService {
     private LayerMapper layerMapper;
     @Autowired
     private LayerFileInfoMapper layerFileInfoMapper;
+
 
     /**
 	 * Layer 총 건수
@@ -117,7 +119,7 @@ public class LayerServiceImpl implements LayerService {
     }
 
     /**
-    * layer 정보 취득
+    * layer 获取情报
     * @param layerId
     * @return
     */
@@ -264,7 +266,7 @@ public class LayerServiceImpl implements LayerService {
     }
 
     /**
-    * ogr2ogr实行
+    * Ogr2Ogr 실행
     * @param layer
     * @param isLayerFileInfoExist
     * @param shapeFileName
@@ -297,11 +299,26 @@ public class LayerServiceImpl implements LayerService {
 //		shapeFileParser.parse(shapeFileName);
         String enviromentPath = propertiesConfig.getOgr2ogrEnviromentPath();
         Ogr2OgrExecute ogr2OgrExecute = new Ogr2OgrExecute(osType, driver, shapeFileName, shapeEncoding, layer.getLayerKey(), updateOption, layerSourceCoordinate, layerTargetCoordinate, enviromentPath);
-        ogr2OgrExecute.insert();
+        ogr2OgrExecute.insert();//将shpfile数据转换成postgis表数据（shp数据入库）
+        //当ogr2ogr插入数据库后生成表xxx，执行将表xxx数据发布layer图层到geoserver中
+        /***
+         * @Title  方法添加
+         * @Description 当ogr2ogr插入数据库后生成表xxx，执行将表xxx数据发布layer图层到geoserver中
+         * @Param [layer, isLayerFileInfoExist, shapeFileName, shapeEncoding]
+         * @return void
+         * @Author LTW
+         * @Date 2023/6/20
+        */
+        Autopubgeoserver autopubgeoserverr= new Autopubgeoserver();
+        autopubgeoserverr.autopubgeoserver(layer.getLayerKey(),layerTargetCoordinate);
+        System.out.println("++++++++++++++++++++++++++++投影+++++++++++++++++++++++++++++++++++++");
+        System.out.println(layerTargetCoordinate);
+        System.out.println(layerSourceCoordinate);
+
     }
-    
+
     /**
-     * 以shp档案资料作为数据库资料
+     * shp파일 정보를 db 정보 기준으로 export
      */
     @Transactional
     public void exportOgr2Ogr(LayerFileInfo layerFileInfo, Layer layer) throws Exception {
@@ -327,7 +344,7 @@ public class LayerServiceImpl implements LayerService {
     }
 
     /**
-    * 用这个shape文件激活layer
+    * layer 를 이 shape 파일로 활성화
     * @param layerId
     * @param layerFileInfoGroupId
     * @return
@@ -361,7 +378,7 @@ public class LayerServiceImpl implements LayerService {
     }
     
 	/**
-	 * 图层回滚处理
+	 * 레이어 롤백 처리
 	 * 
 	 * @param layer
 	 * @param isLayerFileInfoExist
@@ -375,14 +392,14 @@ public class LayerServiceImpl implements LayerService {
 		if (isLayerFileInfoExist) {
 			layerFileInfoMapper.deleteLayerFileInfoByGroupId(deleteLayerFileInfoGroupId);
 
-			// 모든 layer_file_info 의 shape 상태를 비활성화로 update 함
+			// 更新所有layer_file_info的shape状态为禁用
 			layerFileInfoMapper.updateLayerFileInfoAllDisabledByLayerId(layer.getLayerId());
-			// 이 레이어의 지난 데이터를 비 활성화 상태로 update 함
+			// 将此层的上一层数据更新为禁用
 			layerFileInfoMapper.updateShapePreDataDisable(layer.getLayerKey());
 
-			// 이전 레이어 이력을 활성화
+			// 激活以前一层的履历
 			layerFileInfoMapper.updateLayerFileInfoByGroupId(layerFileInfo);
-			// 이전 shape 데이터를 활성화
+			// 激活之前的shape数据
 			Map<String, String> orgMap = new HashMap<>();
 			orgMap.put("fileVersion", layerFileInfo.getVersionId().toString());
 			orgMap.put("tableName", layer.getLayerKey());
@@ -395,7 +412,7 @@ public class LayerServiceImpl implements LayerService {
 	}
 	
 	/**
-	 * 删除图层
+	 * 레이어 삭제
 	 * 
 	 * @param layerId
 	 * @return
@@ -417,9 +434,9 @@ public class LayerServiceImpl implements LayerService {
 			deleteGeoserverLayer(geopolicy, layer.getLayerKey());
 			// geoserver style 삭제
 			deleteGeoserverLayerStyle(geopolicy, layer.getLayerKey());
-			// layer_file_info 히스토리 삭제
+			// 删除layer_file_info历史
 			layerFileInfoMapper.deleteLayerFileInfo(layerId);
-			// 공간정보 테이블 삭제
+			// 删除空间数据表
 			String layerExists = layerMapper.isLayerExists(layer.getLayerKey());
 			if(layerExists != null) {
 				layerMapper.deleteLayerTable(layer.getLayerKey());
@@ -433,7 +450,7 @@ public class LayerServiceImpl implements LayerService {
 /****************geoserver rest api 관련  서비스 *********************************************/	
 	
     /**
-    * 如果layer未注册，则使用rest api注册layer
+    * layer 가 등록 되어 있지 않은 경우 rest api 를 이용해서 layer를 등록
     * @throws Exception
     */
     @Transactional
@@ -444,13 +461,13 @@ public class LayerServiceImpl implements LayerService {
         }
 
         if(HttpStatus.OK == httpStatus) {
-            log.info("layerKey = {} 是已经存在的layer.", layerKey);
-            // 이미 등록 되어 있음
+            log.info("layerKey = {} 는 이미 존재하는 layer 입니다.", layerKey);
+            // 已注册
         } else if(HttpStatus.NOT_FOUND == httpStatus) {
-            // 신규 등록
+            // 新登记
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.TEXT_XML);
-            // geoserver basic 암호화 아이디:비밀번호 를 base64로 encoding
+            // geoserver basic加密id:密码为base64
             headers.add("Authorization", "Basic " + Base64.getEncoder().encodeToString( (geoPolicy.getGeoserverUser() + ":" + geoPolicy.getGeoserverPassword()).getBytes()));
 
             // body
@@ -474,14 +491,14 @@ public class LayerServiceImpl implements LayerService {
             log.info("----------------------- response = {}", response);
 //			log.info("----------------------- body = {}", response.getBody());
 
-            // shape 파일이 없는 layer를 등록 하려고 하면 400 Bad Request가 나옴
+            // 如果你想注册一个没有shape文件的layer，就会出现400 Bad Request
         } else {
             throw new Exception("http status code = " + httpStatus.toString());
         }
     }
     
     /**
-     * 레이어의 스타일 정보를 수정
+     * 修正图层的风格信息
      * @param layer
      * @return
      */
@@ -502,12 +519,12 @@ public class LayerServiceImpl implements LayerService {
          }
 
          if(HttpStatus.OK.equals(httpStatus)) {
-             log.info("styleName = {} 는 이미 존재하는 layerStyle 입니다.", layer.getLayerKey());
-             // 이미 등록 되어 있음, update
+             log.info("styleName = {} 已经存在 layerStyle .", layer.getLayerKey());
+             // 已注册, update
          } else if(HttpStatus.NOT_FOUND.equals(httpStatus)) {
-             // 신규 등록
+             // 新登记
              insertGeoserverLayerStyle(geoPolicy, layer);
-             // 기본 지오메트리타입 스타일 get
+             // 基本geometry类型style get
              xmlData = getLayerDefaultStyleFileData(layer.getGeometryType());
          } else {
              throw new Exception("http status code = " + httpStatus.toString());
@@ -526,7 +543,7 @@ public class LayerServiceImpl implements LayerService {
      }
      
 	/**
-	 * 레이어가 존재 하는지를 검사
+	 * 检查是否存在图层
 	 * 
 	 * @param geopolicy
 	 * @param layerKey
@@ -538,7 +555,7 @@ public class LayerServiceImpl implements LayerService {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.TEXT_XML);
-			// geoserver basic 암호화 아이디:비밀번호 를 base64로 encoding
+			// 地理服务器基本加密标识: 将密码编码为base64
 			headers.add("Authorization", "Basic " + Base64.getEncoder()
 					.encodeToString((geopolicy.getGeoserverUser() + ":" + geopolicy.getGeoserverPassword()).getBytes()));
 
@@ -574,12 +591,11 @@ public class LayerServiceImpl implements LayerService {
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		}
-
 		return httpStatus;
 	}
      
 	/**
-	 * 레이어 스타일 정보 등록
+	 * 注册图层样式信息
 	 * 
 	 * @param geopolicy
 	 * @param layer
@@ -589,11 +605,11 @@ public class LayerServiceImpl implements LayerService {
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
-		// 클라이언트가 서버에 어떤 형식(MediaType)으로 달라는 요청을 할 수 있는데 이게 Accpet 헤더를 뜻함.
+		// 客户端可能会请求服务器采用某种格式 (MediaType)，这意味着acpeter标头。
 		List<MediaType> acceptList = new ArrayList<>();
 		acceptList.add(MediaType.ALL);
 		headers.setAccept(acceptList);
-		// 클라이언트가 request에 실어 보내는 데이타(body)의 형식(MediaType)를 표현
+		// 表示客户端向请求发送的正文 (MediaType) 的格式
 		headers.setContentType(MediaType.TEXT_XML);
 		// geoserver basic 암호화 아이디:비밀번호 를 base64로 encoding
 		headers.add("Authorization", "Basic " + Base64.getEncoder()
@@ -615,7 +631,7 @@ public class LayerServiceImpl implements LayerService {
 	}
 	
 	/**
-	 * 기존에 존재하는 스타일의 정보를 취득 
+	 * 获取现有类型的信息
 	 * @param geopolicy
 	 * @param layerKey
 	 * @return
@@ -671,7 +687,7 @@ public class LayerServiceImpl implements LayerService {
     }
     
 	/**
-	 * 기본 레이어 스타일 파일을 취득
+	 * 获取基本层样式文件
 	 * 
 	 * @param geometryType
 	 * @return
@@ -685,14 +701,14 @@ public class LayerServiceImpl implements LayerService {
 			RestTemplate restTemplate = new RestTemplate();
 
 			HttpHeaders headers = new HttpHeaders();
-			// 클라이언트가 서버에 어떤 형식(MediaType)으로 달라는 요청을 할 수 있는데 이게 Accpet 헤더를 뜻함.
+			// 客户端可以以某种形式(MediaType)请求服务器，这意味着Accpet header。
 			List<MediaType> acceptList = new ArrayList<>();
 			acceptList.add(MediaType.TEXT_XML);
 			headers.setAccept(acceptList);
 
-			// 클라이언트가 request에 실어 보내는 데이타(body)의 형식(MediaType)를 표현
+			// 表示客户端发送到request的MediaType格式
 			headers.setContentType(MediaType.TEXT_XML);
-			// geoserver basic 암호화 아이디:비밀번호 를 base64로 encoding
+			// geoserver basic加密id:密码为base64
 			headers.add("Authorization", "Basic " + Base64.getEncoder()
 					.encodeToString((geopolicy.getGeoserverUser() + ":" + geopolicy.getGeoserverPassword()).getBytes()));
 
@@ -736,7 +752,7 @@ public class LayerServiceImpl implements LayerService {
 	}
      
 	/**
-	 * 레이어 스타일 파일을 취득
+	 * 获取层叠样式文件
 	 * 
 	 * @param layerId
 	 * @return
@@ -751,14 +767,14 @@ public class LayerServiceImpl implements LayerService {
 			RestTemplate restTemplate = new RestTemplate();
 
 			HttpHeaders headers = new HttpHeaders();
-			// 클라이언트가 서버에 어떤 형식(MediaType)으로 달라는 요청을 할 수 있는데 이게 Accpet 헤더를 뜻함.
+			// 客户端可以以某种形式(MediaType)请求服务器，这意味着Accpet header。
 			List<MediaType> acceptList = new ArrayList<>();
 			acceptList.add(MediaType.TEXT_XML);
 			headers.setAccept(acceptList);
 
-			// 클라이언트가 request에 실어 보내는 데이타(body)의 형식(MediaType)를 표현
+			// 表示客户端发送到request的MediaType格式
 			headers.setContentType(MediaType.TEXT_XML);
-			// geoserver basic 암호화 아이디:비밀번호 를 base64로 encoding
+			// geoserver basic加密id:密码为base64
 			headers.add("Authorization", "Basic " + Base64.getEncoder()
 					.encodeToString((geopolicy.getGeoserverUser() + ":" + geopolicy.getGeoserverPassword()).getBytes()));
 
@@ -803,7 +819,7 @@ public class LayerServiceImpl implements LayerService {
 	}
       
 	/**
-	 * 레이어 스타일 정보를 수정
+	 * 修改图层样式信息
 	 * 
 	 * @param geopolicy
 	 * @param layer
@@ -840,7 +856,7 @@ public class LayerServiceImpl implements LayerService {
 	}
        
 	/**
-	 * geoserver에 존재하는 레이어를 삭제
+	 * geoserver删除已有的图层
 	 * 
 	 * @param geopolicy
 	 * @param layerKey
@@ -943,7 +959,7 @@ public class LayerServiceImpl implements LayerService {
 	}
 
 	/**
-	 * geoserver rest api 가 빈 파일을 등록하고 update 해야 함
+	 * geoserver rest api 注册并更新假文件
 	 * 
 	 * @param layerKey
 	 * @return

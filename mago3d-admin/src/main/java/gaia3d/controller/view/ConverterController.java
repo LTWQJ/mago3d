@@ -36,7 +36,7 @@ public class ConverterController {
 	private ConverterService converterService;
 	
 	/**
-	 * converter job 목록
+	 * converter job 列表
 	 * @param request
 	 * @param pageNo
 	 * @param model
@@ -118,7 +118,7 @@ public class ConverterController {
 	}
 	
 	/**
-	 * 검색 조건
+	 * 搜索条件
 	 * @param pageType
 	 * @param converterJob
 	 * @return

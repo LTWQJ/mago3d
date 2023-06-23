@@ -53,6 +53,9 @@ public class RootConfig {
 		HikariDataSource dataSource = new HikariDataSource();
 		//dataSource.setPoolName("mago3DAdminPool");
 		dataSource.setDriverClassName(driverClassName);
+//		dataSource.setJdbcUrl(url);
+//		dataSource.setUsername(username);
+//		dataSource.setPassword(password);
 		dataSource.setJdbcUrl(Crypt.decrypt(url));
 		dataSource.setUsername(Crypt.decrypt(username));
 		dataSource.setPassword(Crypt.decrypt(password));

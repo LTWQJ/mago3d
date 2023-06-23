@@ -31,7 +31,7 @@ import gaia3d.support.SQLInjectSupport;
 import gaia3d.utils.DateUtils;
 
 /**
- * 3D 데이터 파일 업로더
+ * 3D 数据文件上传器
  * TODO 설계 파일 안의 texture 의 경우 설계 파일에서 참조하는 경우가 있으므로 이름 변경 불가.
  * @author jeongdae
  *
@@ -70,7 +70,7 @@ public class UploadDataController {
 		List<DataGroup> dataGroupList = dataGroupService.getListDataGroup(dataGroup);
 		DataGroup basicDataGroup = dataGroupService.getBasicDataGroup();
 		
-		// basic 디렉토리를 실수로 지웠거나 만들지 않았는지 확인
+		// 确认是否不小心删除或创建了basic目录
 		File basicDirectory = new File(propertiesConfig.getAdminDataServiceDir() + "basic");
 		if(!basicDirectory.exists()) {
 			basicDirectory.mkdir();
@@ -90,7 +90,7 @@ public class UploadDataController {
 	}
 	
 	/**
-	 * 업로딩 파일 목록
+	 * 上传文件列表
 	 * @param request
 	 * @param uploadData
 	 * @param pageNo
@@ -158,7 +158,7 @@ public class UploadDataController {
 	}
 	
 	/**
-	 * 검색 조건
+	 * 搜索条件
 	 * @param search
 	 * @return
 	 */

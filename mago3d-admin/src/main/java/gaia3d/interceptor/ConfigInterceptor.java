@@ -21,7 +21,7 @@ import gaia3d.domain.YOrN;
 import gaia3d.service.PolicyService;
 
 /**
- * 사이트 전체 설정 관련 처리를 담당
+ * 负责处理整个网站的设置
  *  
  * @author jeongdae
  *

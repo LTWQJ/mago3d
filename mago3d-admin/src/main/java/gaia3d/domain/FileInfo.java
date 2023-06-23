@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * 파일 기본 정보 관리 클래스
+ * 文件基本信息管理类
  * @author Cheon JeongDae
  *
  */

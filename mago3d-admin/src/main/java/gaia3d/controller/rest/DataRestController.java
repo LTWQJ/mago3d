@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class DataRestController {
 	private PropertiesConfig propertiesConfig;
 	
 	/**
-	 * 데이터 정보
+	 * 数据信息
 	 * @param dataId
 	 * @return
 	 */
@@ -80,7 +81,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * 사용자 데이터 수정
+	 * 修改用户数据
 	 * @param request
 	 * @param dataGroup
 	 * @param bindingResult
@@ -108,7 +109,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * 데이터 속성 정보
+	 * 关于数据属性
 	 * @param dataId
 	 * @return
 	 */
@@ -131,7 +132,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * 데이터 Object 속성 정보
+	 * 关于数据对象属性
 	 * @param dataId
 	 * @return
 	 */
@@ -154,11 +155,11 @@ public class DataRestController {
 	}
 	
 	/**
-	 * 데이터 파일 업로딩
+	 * 上传数据文件
 	 * @param model
 	 * @return
 	 */
-	@PostMapping(value = "/bulk-upload")
+	@PostMapping(value = "/bulk-upload")//批量上传文件
 	public Map<String, Object> bulkUpload(MultipartHttpServletRequest request) {
 		Map<String, Object> result = new HashMap<>();
 		String errorCode = null;
@@ -169,13 +170,13 @@ public class DataRestController {
 		Integer dataGroupId = Integer.valueOf(request.getParameter("dataGroupId"));
 		MultipartFile multipartFile = request.getFile("dataFileName");
 		// TODO
+//		上传文件--使用的是FileUtils.upload方法。
 		FileInfo fileInfo = FileUtils.upload(userSession.getUserId(), multipartFile, FileUtils.DATA_FILE_UPLOAD, propertiesConfig.getDataBulkUploadDir());
 		if(fileInfo.getErrorCode() != null && !"".equals(fileInfo.getErrorCode())) {
 			log.info("@@@@@@@@@@@@@@@@@@@@ error_code = {}", fileInfo.getErrorCode());
 			result.put("statusCode", HttpStatus.BAD_REQUEST.value());
 			result.put("errorCode", fileInfo.getErrorCode());
 			result.put("message", message);
-			
 			return result;
 		}
 		
@@ -192,7 +193,7 @@ public class DataRestController {
 		result.put("updateSuccessCount", dataFileInfo.getUpdateSuccessCount());
 		result.put("insertErrorCount", dataFileInfo.getInsertErrorCount());
 		
-		// 파일 삭제
+		// 删除文件
 		File copyFile = new File(fileInfo.getFilePath() + fileInfo.getFileRealName());
 		if(copyFile.exists()) {
 			copyFile.delete();
@@ -207,7 +208,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * Smart Tiling 데이터 수정
+	 * Smart Tiling 修改数据
 	 * @param request
 	 * @return
 	 */
@@ -245,7 +246,7 @@ public class DataRestController {
 		result.put("updateSuccessCount", dataSmartTilingFileInfo.getUpdateSuccessCount());
 		result.put("insertErrorCount", dataSmartTilingFileInfo.getInsertErrorCount());
 		
-		// 파일 삭제
+		// 删除文件
 		File copyFile = new File(fileInfo.getFilePath() + fileInfo.getFileRealName());
 		if(copyFile.exists()) {
 			copyFile.delete();
@@ -260,7 +261,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * Data Attribute 수정
+	 * Data Attribute 修改
 	 * @param request
 	 * @return
 	 */
@@ -299,7 +300,7 @@ public class DataRestController {
 		result.put("updateSuccessCount", dataAttributeFileInfo.getUpdateSuccessCount());
 		result.put("insertErrorCount", dataAttributeFileInfo.getInsertErrorCount());
 		
-		// 파일 삭제
+		// 删除文件
 		File copyFile = new File(fileInfo.getFilePath() + fileInfo.getFileRealName());
 		if(copyFile.exists()) {
 			copyFile.delete();
@@ -314,7 +315,7 @@ public class DataRestController {
 	}
 	
 	/**
-	 * Data object Attribute 수정
+	 * Data object Attribute 修改
 	 * @param request
 	 * @return
 	 */
@@ -353,7 +354,7 @@ public class DataRestController {
 		result.put("updateSuccessCount", dataObjectAttributeFileInfo.getUpdateSuccessCount());
 		result.put("insertErrorCount", dataObjectAttributeFileInfo.getInsertErrorCount());
 		
-		// 파일 삭제
+		// 删除文件
 		File copyFile = new File(fileInfo.getFilePath() + fileInfo.getFileRealName());
 		if(copyFile.exists()) {
 			copyFile.delete();

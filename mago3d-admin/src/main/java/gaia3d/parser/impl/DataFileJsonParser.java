@@ -30,7 +30,7 @@ public class DataFileJsonParser implements DataFileParser {
 		int parseErrorCount = 0;
 		
 		DataGroup dataGroup = new DataGroup();
-		List<DataInfo> dataInfoList = new ArrayList<>();
+		List<DataInfo> dataInfoList = new ArrayList<>();//没有地方往dataInfoList中存数据
 		try {
 			byte[] jsonData = Files.readAllBytes(Paths.get(fileInfo.getFilePath() + fileInfo.getFileRealName()));
 			String encodingData = new String(jsonData, StandardCharsets.UTF_8);
@@ -73,7 +73,7 @@ public class DataFileJsonParser implements DataFileParser {
 				dataInfoList.addAll(parseChildren(null, 0, childrenNode));
 			}
 		} catch (IOException e) {
-			throw new RuntimeException("Data 일괄 등록 Json 파일 파싱 오류! message = " + e.getMessage());
+			throw new RuntimeException("数据批量注册Json文件解析错误! message = " + e.getMessage());
 		}
 		
 		Map<String, Object> result = new HashMap<>();
@@ -86,7 +86,7 @@ public class DataFileJsonParser implements DataFileParser {
 	}
 	
 	/**
-	 * 자식 data 들을 재귀적으로 파싱
+	 * 递归解析子数据
 	 * @param dataInfoList
 	 * @param depth
 	 * @param childrenNode

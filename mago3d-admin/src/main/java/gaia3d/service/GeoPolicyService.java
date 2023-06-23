@@ -3,27 +3,27 @@ package gaia3d.service;
 import gaia3d.domain.GeoPolicy;
 
 /**
- * 2D, 3D 운영 정책
+ * 2D, 3D 运营政策
  * @author jeongdae
  *
  */
 public interface GeoPolicyService {
 	
 	/**
-	 * 운영 정책 정보
+	 * 操作策略信息
 	 * @return
 	 */
 	GeoPolicy getGeoPolicy();
 	
 	/**
-	 * 공간 정보 기본 수정
+	 * 修改空间信息默认
 	 * @param geoPolicy
 	 * @return
 	 */
 	int updateGeoPolicy(GeoPolicy geoPolicy);
 	
 	/**
-	 * Geo Server 수정
+	 * Geo Server 修改
 	 * @param geoPolicy
 	 * @return
 	 */

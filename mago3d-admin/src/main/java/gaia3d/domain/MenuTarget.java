@@ -1,7 +1,7 @@
 package gaia3d.domain;
 
 public enum MenuTarget {
-	// 사용자
+	// 用户
 	USER("0"),
 	// 서버
 	ADMIN("1");

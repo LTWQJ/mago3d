@@ -32,7 +32,7 @@
 		<span class="spinner"></span>
 	</div>
 </div>
-<div id="wrap" style="min-height: 560px;"> <!-- 왼쪽 메뉴 높이에 맞춰서 설정해 줘야함 -->
+<div id="wrap" style="min-height: 560px;"> <!-- 要按照左边菜单的高度设定 -->
 	<!-- S: NAVWRAP -->
 	<div class="navWrap">
 		<div th:replace="~{/fragments/menu :: #navWrap}"></div>
@@ -174,7 +174,7 @@
 		 * @param {object} serverPolicy mage3d geopolicy. required.
 		 * @param {object} callback loadstart callback, loadend callback. option.
 		 * @param {object} options Cesium viewer parameter. option.
-		 * @param {Cesium.Viewer} legacyViewer 타 시스템과의 연동의 경우 view 객체가 생성되어서 넘어 오는 경우가 있음. option.
+		 * @param {Cesium.Viewer} legacyViewer 与其他系统联动时，创建view对象并跳转。option。
 		*/
 		MAGO3D_INSTANCE = new Mago3D.Mago3d('magoContainer', geoPolicyJson, {loadend : magoLoadEnd}, cesiumViewerOption);
 
@@ -199,7 +199,7 @@
 		// mago3d logo 추가
 		Mago3D.tempCredit(viewer);
 
-		//우측 상단 지도 컨트롤러
+		//右上角的地图控制器
 		MapControll(viewer);
 		//공간분석 기능 수행
 		SpatialAnalysis(magoInstance);

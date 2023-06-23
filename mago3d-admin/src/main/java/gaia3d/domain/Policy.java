@@ -55,7 +55,7 @@ public class Policy {
  	private String passwordChangeTerm;
  	// 패스워드 최소 길이 기본 8
  	private Integer passwordMinLength;
- 	// 패스워드 최대 길이 기본 32
+ 	// 密码最大长度默认值32
  	private Integer passwordMaxLength;
  	// 패스워드 영문 대문자 개수 기본 1
  	private Integer passwordEngUpperCount;

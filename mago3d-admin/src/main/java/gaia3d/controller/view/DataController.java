@@ -43,7 +43,7 @@ public class DataController {
 	private PolicyService policyService;
 
 	/**
-	 * 데이터 목록
+	 * 数据列表
 	 * @param request
 	 * @param dataInfo
 	 * @param pageNo
@@ -71,24 +71,33 @@ public class DataController {
 		}
 
 		long totalCount = dataService.getDataTotalCount(dataInfo);
+
 		Pagination pagination = new Pagination(request.getRequestURI(), getSearchParameters(PageType.LIST, dataInfo),
 				totalCount, Long.parseLong(pageNo), dataInfo.getListCounter());
 		dataInfo.setOffset(pagination.getOffset());
 		dataInfo.setLimit(pagination.getPageRows());
 
 		List<DataInfo> dataList = new ArrayList<>();
-		if(totalCount > 0l) {
+//		调试修改----我理解应该是totaCount!=0才获取全部数据----注释以下代码修改===》ltw----2023.5.12
+//		if(totalCount == 0) {
+//			dataList = dataService.getListData(dataInfo);//获取不到数据因为数据库中没有数据--2023.5.10
+//		}
+//=========修改代码如下====>ltw----2023.5.12=====================================================
+		if(totalCount != 0) {
 			dataList = dataService.getListData(dataInfo);
 		}
-
+//=============================================================================================
 		model.addAttribute("dataGroupList", dataGroupList);
+		System.out.println("====================================================================");
+		System.out.println(dataList);
+		System.out.println("====================================================================");
 		model.addAttribute(pagination);
 		model.addAttribute("dataList", dataList);
 		return "/data/list";
 	}
 
 	/**
-	 * 데이터 등록 화면
+	 * 数据注册屏幕
 	 */
 	@GetMapping(value = "/input")
 	public String input(HttpServletRequest request, Model model) {
@@ -109,7 +118,7 @@ public class DataController {
 	}
 
 	/**
-	 * Data 정보
+	 * Data 信息
 	 * @param dataInfo
 	 * @param model
 	 * @return
@@ -131,7 +140,7 @@ public class DataController {
 	}
 
 	/**
-	 * 사용자 데이터 수정 화면
+	 * “修改用户数据”屏幕
 	 * @param request
 	 * @param dataId
 	 * @param model
@@ -153,7 +162,7 @@ public class DataController {
 	}
 
 	/**
-	 * 데이터 삭제
+	 * 删除数据
 	 * @param dataId
 	 * @param model
 	 * @return
@@ -178,7 +187,7 @@ public class DataController {
 	}
 
 	/**
-	 * 검색 조건
+	 * 搜索条件
 	 * @param search
 	 * @return
 	 */

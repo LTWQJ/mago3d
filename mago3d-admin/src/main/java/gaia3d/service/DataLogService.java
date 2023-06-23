@@ -19,7 +19,7 @@ public interface DataLogService {
 	Long getDataInfoLogTotalCount(DataInfoLog dataInfoLog);
 	
 	/**
-	 * 데이터 변경 요청 이력 목록
+	 * 数据更改请求历史记录列表
 	 * @param dataInfoLog
 	 * @return
 	 */

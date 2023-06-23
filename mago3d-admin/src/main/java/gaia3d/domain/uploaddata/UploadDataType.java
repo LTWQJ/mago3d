@@ -1,7 +1,7 @@
 package gaia3d.domain.uploaddata;
 
 /**
- * 3DS 를 enum 으로 바로 사용할 수가 없음
+ * 3DS 不能直接用作 enum
  * @author Jeongdae
  *
  */
@@ -38,7 +38,7 @@ public enum UploadDataType {
 	}
 	
 	/**
-	 * TODO values for loop 로 변환
+	 * TODO values for loop 转换为
 	 * @param value
 	 * @return
 	 */

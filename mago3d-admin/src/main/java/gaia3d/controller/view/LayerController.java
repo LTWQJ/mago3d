@@ -58,7 +58,7 @@ public class LayerController implements AuthorizationController {
     @Autowired
     private PolicyService policyService;
     
-    // 파일 copy 시 버퍼 사이즈
+    // 파일 copy 城市缓冲区大小
     public static final int BUFFER_SIZE = 8192;
 
     /**
@@ -207,7 +207,7 @@ public class LayerController implements AuthorizationController {
     }
 
     /**
-	 *搜索条件
+	 * 검색 조건
 	 * @param pageType
 	 * @param layer
 	 * @return

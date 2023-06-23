@@ -40,7 +40,7 @@ public class UserGroupRestController implements AuthorizationController {
 	private CacheConfig cacheConfig;
 
 	/**
-	 * 그룹Key 중복 체크
+	 * 组密钥重复检查
 	 * @param model
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class UserGroupRestController implements AuthorizationController {
 		String message = null;
 		Boolean duplication = Boolean.TRUE;
 		
-		// TODO @Valid 로 구현해야 함
+		// TODO @Valid 必须实现为
 		if(StringUtils.isEmpty(userGroup.getUserGroupKey())) {
 			result.put("statusCode", HttpStatus.BAD_REQUEST.value());
 			result.put("errorCode", "user.group.key.empty");
@@ -73,7 +73,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 정보
+	 * 关于用户组
 	 * @param userGroup
 	 * @return
 	 */
@@ -103,7 +103,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 등록
+	 * 注册用户组
 	 * @param request
 	 * @param userGroup
 	 * @param bindingResult
@@ -143,7 +143,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 수정
+	 * 修改用户组
 	 * @param request
 	 * @param userGroup
 	 * @param bindingResult
@@ -181,7 +181,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 메뉴 수정
+	 * 修改用户组菜单
 	 * @param request
 	 * @param userGroupId
 	 * @param userGroupMenu
@@ -210,7 +210,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 Role 수정
+	 * 修改用户组 Role
 	 * @param request
 	 * @param userGroupId
 	 * @param userGroupRole
@@ -239,7 +239,7 @@ public class UserGroupRestController implements AuthorizationController {
 	}
 
 	/**
-	 * 사용자 그룹 트리 순서 수정 (up/down)
+	 * 修改用户组树顺序 （up/down）
 	 * @param request
 	 * @param userGroupId
 	 * @param userGroup

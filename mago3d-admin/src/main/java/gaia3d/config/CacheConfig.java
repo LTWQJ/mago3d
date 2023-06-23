@@ -48,13 +48,13 @@ public class CacheConfig {
         CacheParams cacheParams = new CacheParams();
 		cacheParams.setCacheType(CacheType.SELF);
 
-		// 운영 정책 캐시 갱신
+		// 更新操作策略缓存
 		policy(cacheParams);
-        // 사용자 그룹
+        // 用户组
 		userGroup(cacheParams);
-        // 사용자 그룹별 메뉴, Menu
+        // 按用户组列出的菜单, Menu
         menu(cacheParams);
-        // 사용자 그룹별 메뉴, Role
+        // 按用户组列出的菜单, Role
         role(cacheParams);
         
         log.info("*************************************************");
@@ -78,10 +78,8 @@ public class CacheConfig {
      */
     private void policy(CacheParams cacheParams) {
     	log.info("************ Cache Reload Policy ************");
-
 		Policy policy = policyService.getPolicy();
 		CacheManager.setPolicy(policy);
-
     	CacheType cacheType = cacheParams.getCacheType();
     	if(cacheType == CacheType.BROADCAST) {
     		callRemoteCache(cacheParams);
@@ -89,7 +87,7 @@ public class CacheConfig {
     }
     
     /**
-     * 2D, 3D 운영 정책
+     * 2D, 3D 运营政策
      * @param cacheParams
      */
     private void geoPolicy(CacheParams cacheParams) {
@@ -101,7 +99,7 @@ public class CacheConfig {
     }
     
     /**
-     * 사용자 그룹
+     * 用户组
      */
     private void userGroup(CacheParams cacheParams) {
     	log.info("************ Cache Reload userGroup ************");
@@ -163,7 +161,7 @@ public class CacheConfig {
     }
     
     /**
-     * 사용자 그룹, 메뉴, Role
+     * 用户组、菜单、Role
      */
     private void role(CacheParams cacheParams) {
     	log.info("************ Cache Reload role ************");
@@ -192,7 +190,7 @@ public class CacheConfig {
     }
 
     /**
-	 * Remote Cache 갱신 요청
+	 * Remote Cache 续订请求
 	 * @param cacheParams
 	 */
 	private void callRemoteCache(CacheParams cacheParams) {
@@ -210,14 +208,14 @@ public class CacheConfig {
 		
 		String authData = stringBuilder.toString();
 
-		// TODO 암호화 해야 하는데 임시 처리
+		// TODO 需要加密，但需要临时处理
 //		HttpHeaders headers = new HttpHeaders();
 //		headers.setContentType(MediaType.APPLICATION_JSON);
 //		MultiValueMap<String, String> params= new LinkedMultiValueMap<String, String>();
 //		params.add("cacheName", cacheName.toString());
 //		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
-		// TODO 임시. external_service table로 옮겨야 함
+		// TODO 临时. external_service table移动到
 		try {
 			URI uri = new URI(propertiesConfig.getCacheClientUrl() + "cache/reload");
 			@SuppressWarnings("unchecked")
@@ -226,7 +224,7 @@ public class CacheConfig {
             //ResponseEntity<APIResult> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, APIResult.class);
             log.info("----------------------- result = {}", result);
 		} catch (URISyntaxException e) {
-			log.info("데이터 converter 상태 변경 api 호출 실패 = {}", e.getMessage());
+			log.info("数据连接器状态更改 api 调用失败 = {}", e.getMessage());
 		}
 	}
 }

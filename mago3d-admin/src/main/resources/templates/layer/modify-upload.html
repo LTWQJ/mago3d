@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/default">
+<html th:lang="${accessibility}" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/default"
+	  xmlns:form="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Layer 수정</title>
+	<title>Layer 修改</title>
 	<th:block layout:fragment="pageCustomStyle">
 		<link rel="stylesheet" th:href="@{/css/{lang}/font/font.css(lang=${lang},cacheVersion=${contentCacheVersion})}" />
 		<link rel="stylesheet" th:href="@{/images/{lang}/icon/glyph/glyphicon.css(lang=${lang},cacheVersion=${contentCacheVersion})}" />
@@ -78,7 +80,7 @@
 						</div>
 						<form id="layer" th:object="${layer}" method="post" th:action="@{#}" onsubmit="return false;">
 						<table class="input-table scope-row" summary="upload 레이어 수정 테이블">
-						<caption class="hiddenTag">업로드 레이어 수정</caption>
+						<caption class="hiddenTag">修改上传图层</caption>
 							<colgroup>
 			                    <col class="col-label l" style="width: 15%" >
 			                    <col class="col-input" style="width: 35%" >
@@ -87,29 +89,29 @@
 			                </colgroup>
 			                <tr>
 								<th class="col-label" scope="row">
-									<label for="layerGroupName">Layer 그룹명</label>
+									<label for="layerGroupName">Layer 组</label>
 									<span class="icon-glyph glyph-emark-dot color-warning"></span>
 								</th>
 								<td class="col-input">
 									<input type="hidden" id="layerGroupId" name="layerGroupId" th:field="*{layerGroupId}" />
 									<input type="text" id="layerGroupName" name="layerGroupName" th:field="*{layerGroupName}" class="ml" readonly="true" />
-									<input type="button" id="layerGroupButtion" value="Layer 그룹 찾기" />
+									<input type="button" id="layerGroupButtion" value="Layer 查找组" />
 								</td>
 								<th class="col-label" scope="row">
-			                        <label for="sharing">공유 유형</label>
+			                        <label for="sharing">共享类型</label>
 			                    </th>
 			                    <td class="col-input radio-set">
 									<input type="radio" id="sharingPublic" name="sharing" th:field="*{sharing}" value="public" />
-									<label for="sharingPublic">공개</label>
+									<label for="sharingPublic">公开</label>
 									<input type="radio" id="sharingPrivate" name="sharing" th:field="*{sharing}" value="private" />
-									<label for="sharingPrivate">비공개</label>
+									<label for="sharingPrivate">非公开</label>
 									<input type="radio" id="sharingGroup" name="sharing" th:field="*{sharing}" value="group" />
-									<label for="sharingGroup">그룹</label>
+									<label for="sharingGroup">组</label>
 			                    </td>
 							</tr>
 							<tr>
 			                    <th class="col-label" scope="row">
-			                        <label for="layerName">Layer 명</label>
+			                        <label for="layerName">Layer 名</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 			                    <td class="col-input">
@@ -125,7 +127,7 @@
 			                </tr>
 			                <tr>
 			                    <th class="col-label" scope="row">
-			                        <label for="serviceType">서비스 타입</label>
+			                        <label for="serviceType">服务类型</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 			                    <td class="col-input">
@@ -138,13 +140,13 @@
 									</select>
 			                    </td>
 			                    <th class="col-label" scope="row">
-			                        <label>Cache 사용 유무</label>
+			                        <label>Cache 是否使用</label>
 			                    </th>
 			                    <td class="col-input radio-set">
 									<input type="radio" id="cacheAvailableTrue" name="cacheAvailable" th:field="*{cacheAvailable}" value="true" />
-									<label for="cacheAvailableTrue">사용</label>
+									<label for="cacheAvailableTrue">使用</label>
 									<input type="radio" id="cacheAvailableFalse" name="cacheAvailable" th:field="*{cacheAvailable}" value="false" />
-									<label for="cacheAvailableFalse">미사용</label>
+									<label for="cacheAvailableFalse">未使用</label>
 			                    </td>
 			                </tr>
 			                <tr>
@@ -154,18 +156,18 @@
 			                    </th>
 			                    <td class="col-input">
 			                        <select id="layerType" name="layerType" th:field="*{layerType}" class="selectBoxClass">
-										<option value="">선택</option>
+										<option value="">选择</option>
 										<option value="vector">Vector</option>
 										<option value="raster">Raster</option>
 									</select>
 			                    </td>
 			                    <th class="col-label" scope="row">
-			                        <label for="geometryType">도형 타입</label>
+			                        <label for="geometryType">图形类型</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 								<td class="col-input">
 									<select id="geometryType" name="geometryType" th:field="*{geometryType}" class="forRaster selectBoxClass">
-										<option value="">선택</option>
+										<option value="">选择</option>
 										<option value="Point">Point</option>
 										<option value="Line">Line</option>
 										<option value="Polygon">Polygon</option>
@@ -174,50 +176,50 @@
 							</tr>
 							<tr>
 								<th class="col-label" scope="row">
-			                        <label for="layerLineColor">외곽선 색상</label>
+			                        <label for="layerLineColor">外圈颜色</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 								<td class="col-input">
-									<label for="lineColorValue" class="hiddenTag">외곽선 색상값</label>
+									<label for="lineColorValue" class="hiddenTag">外框颜色值</label>
 									<input type="text" id="lineColorValue" placeholder="RGB" class="forRaster forLineColor" />
-									<input type="color" id="layerLineColor" name="layerLineColor" class="picker forLineColor" alt="외곽선 색상" />
+									<input type="color" id="layerLineColor" name="layerLineColor" class="picker forLineColor" alt="外圈颜色" />
 								</td>
 								<th class="col-label" scope="row">
-			                        <label for="layerLineStyle">외곽선 두께</label>
+			                        <label for="layerLineStyle">外环线厚度</label>
 			                    </th>
 								<td class="col-input">
-									<input type="number" id="layerLineStyle"  name="layerLineStyle" th:field="*{layerLineStyle}" class="forRaster" alt="외곽선 두께" min="0.1" max="5.0" size="3" step="0.1">
+									<input type="number" id="layerLineStyle"  name="layerLineStyle" th:field="*{layerLineStyle}" class="forRaster" alt="外环线厚度" min="0.1" max="5.0" size="3" step="0.1">
 								</td>
 							</tr>
 			                <tr>
 			                	<th class="col-label" scope="row">
-			                        <label for="layerFillColor">채우기 색상</label>
+			                        <label for="layerFillColor">填充颜色</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 								<td class="col-input">
-									<label for="fillColorValue" class="hiddenTag">채우기 색상값</label>
+									<label for="fillColorValue" class="hiddenTag">填充颜色值</label>
 									<input type="text" id="fillColorValue" placeholder="RGB" class="forRaster forPolygon">
 									<input type="color" id="layerFillColor" name="layerFillColor" class="picker forPolygon" alt="채우기 색상">
 								</td>
 			                	<th class="col-label" scope="row">
-			                        <label for="layerAlphaStyle">투명도</label>
+			                        <label for="layerAlphaStyle">透明度</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 								<td class="col-input">
-									<input type="text" id="layerAlphaStyle" name="layerAlphaStyle" th:field="*{layerAlphaStyle}" class="slider" alt="투명도"/>
-									<label for="sliderRange" class="hiddenTag">투명도 값</label>
+									<input type="text" id="layerAlphaStyle" name="layerAlphaStyle" th:field="*{layerAlphaStyle}" class="slider" alt="透明度"/>
+									<label for="sliderRange" class="hiddenTag">透明度值</label>
 									<input type="range" id="sliderRange" min="0" max="100" value="100" alt="투명도">
 								</td>
 			                </tr>
 			                <tr>
 			                	<th class="col-label" scope="row">
-			                        <label for="viewOrder">레이어 표시 순서</label>
+			                        <label for="viewOrder">图层显示顺序</label>
 			                    </th>
 			                    <td class="col-input">
 			                        <input type="text" id="viewOrder" name="viewOrder" th:field="*{viewOrder}" class="s"/>
 			                    </td>
 			                	<th class="col-label" scope="row">
-			                        <label for="zIndex">표시 순서(Z-Index)</label>
+			                        <label for="zIndex">表示顺序(Z-Index)</label>
 			                    </th>
 			                    <td class="col-input">
 			                        <input type="text" id="zIndex" name="zIndex" th:field="*{zIndex}" class="s" />
@@ -225,38 +227,38 @@
 			                </tr>
 			                <tr>
 			                	<th class="col-label" scope="row">
-			                        <label>기본 표시</label>
+			                        <label>基本表示</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 			                    <td class="col-input radio-set">
 									<input type="radio" id="defaultDisplayTrue" name="defaultDisplay" th:field="*{defaultDisplay}" value="true" />
-									<label for="defaultDisplayTrue">사용</label>
+									<label for="defaultDisplayTrue">使用</label>
 									<input type="radio" id="defaultDisplayFalse" name="defaultDisplay" th:field="*{defaultDisplay}" value="false" />
-									<label for="defaultDisplayFalse">미사용</label>
+									<label for="defaultDisplayFalse">未使用</label>
 			                    </td>
 			                	<th class="col-label" scope="row">
-			                        <label>사용유무</label>
+			                        <label>有无使用</label>
 			                        <span class="icon-glyph glyph-emark-dot color-warning"></span>
 			                    </th>
 			                    <td class="col-input radio-set">
 									<input type="radio" id="availableTrue" name="available" th:field="*{available}" value="true" />
-									<label for="availableTrue">사용</label>
+									<label for="availableTrue">使用</label>
 									<input type="radio" id="availableFalse" name="available" th:field="*{available}" value="false" />
-									<label for="availableFalse">미사용</label>
+									<label for="availableFalse">未使用</label>
 			                    </td>
 			                </tr>
 			                <tr>
 			                	<th class="col-label" scope="row">
-			                        <label>Label 표시 유무</label>
+			                        <label>Label 有无表示</label>
 			                    </th>
 			                    <td class="col-input radio-set">
 									<input type="radio" id="labelDisplayTrue" name="labelDisplay" th:field="*{labelDisplay}" value="true" />
-									<label for="labelDisplayTrue">표시</label>
+									<label for="labelDisplayTrue">表示</label>
 									<input type="radio" id="labelDisplayFalse" name="labelDisplay" th:field="*{labelDisplay}" value="false" />
-									<label for="labelDisplayFalse">비표시</label>
+									<label for="labelDisplayFalse">不表示</label>
 			                    </td>
 			                    <th class="col-label" scope="row">
-			                        <label for="description">설명</label>
+			                        <label for="description">说明</label>
 			                    </th>
 			                    <td class="col-input">
 			                        <input type="text" id="description" name="description" th:field="*{description}" class="l"/>
@@ -264,7 +266,7 @@
 			                </tr>
 			                <tr>
 			                	<th class="col-label" scope="row">
-			                        <form:label path="coordinate">좌표계</form:label>
+			                        <form:label path="coordinate">坐标系</form:label>
 			                    </th>
 			                    <td class="col-input">
 			                        <select id="coordinate" name="coordinate" th:field="*{coordinate}" class="selectBoxClass">
@@ -296,7 +298,7 @@
 									</select>
 			                    </td>
 			                    <th class="col-label" scope="row">
-			                        <label for="shapeEncoding">SHP 파일 인코딩</label>
+			                        <label for="shapeEncoding">SHP 文件编码</label>
 			                    </th>
 			                    <td class="col-input">
 			                    	<select id="shapeEncoding" name="shapeEncoding" th:field="*{shapeEncoding}" class="selectBoxClass" style="width:100px; height: 30px;">
@@ -308,7 +310,7 @@
 						</table>
 						</form>
 						
-						<h4 style="margin-top: 30px; margin-bottom: 5px;">파일 업로딩</h4>
+						<h4 style="margin-top: 30px; margin-bottom: 5px;">文件上传</h4>
 				        <div class="fileSection" style="font-size: 17px;">
 				            <form id="my-dropzone" action="" class="dropzone hzScroll">
 				            	<label for="dropzoneFile" class="hiddenTag">dropzoneFile영역</label>
@@ -317,32 +319,32 @@
 				        <div class="button-group">
 							<div class="center-buttons">
 								<input type="submit" id="allFileUpload" th:value="#{save}"/>
-								<input type="submit" id="allFileClear" value="파일 초기화" />
-								<a href="/layer/list" class="button">목록</a>
+								<input type="submit" id="allFileClear" value="文件初始化" />
+								<a href="/layer/list" class="button">目录</a>
 							</div>
 						</div>
 
-						<h4 style="margin-top: 30px; margin-bottom: 5px;">레이어 변경 이력</h4>
+						<h4 style="margin-top: 30px; margin-bottom: 5px;">图层变更履历</h4>
 						<div class="list">
-							<table class="list-table scope-col" summary="레이어 변경 이력 테이블">
+							<table class="list-table scope-col" summary="图层变更履历表">
 							<caption class="hiddenTag">레이어 변경 이력</caption>
 								<thead>
 									<tr>
-										<th scope="col">번호</th>
-										<th scope="col">파일명</th>
-										<th scope="col">상세</th>
-										<th scope="col">지도</th>
-										<th scope="col">활성화 여부</th>
-										<th scope="col">다운로드</th>
-										<th scope="col">수정자</th>
-										<th scope="col">수정일</th>
-										<th scope="col">등록일</th>
+										<th scope="col">号码</th>
+										<th scope="col">文件名</th>
+										<th scope="col">详细</th>
+										<th scope="col">地图</th>
+										<th scope="col">是否启用</th>
+										<th scope="col">下载</th>
+										<th scope="col">修改器</th>
+										<th scope="col">修改日期</th>
+										<th scope="col">注册日期</th>
 									</tr>
 								</thead>
 								<tbody id="layerFileInfoListArea">
 								<th:block th:if="${layerFileInfoList.empty}">
 									<tr style="height:50px;">
-										<td colspan="9" style="padding-top:15px; text-align:center;">첨부 파일이 존재하지 않습니다.</td>
+										<td colspan="9" style="padding-top:15px; text-align:center;">附件不存在。</td>
 									</tr>
 								</th:block>
 								<th:block th:unless="${layerFileInfoList.empty}" th:each="layerFileInfo, status : ${layerFileInfoList}">
@@ -351,14 +353,14 @@
 										<td class="col-key" th:text="${layerFileInfo.fileName}" style="max-width:315px; word-wrap:break-word;"></td>
 										<td class="col-type"><button type="button" class="detailBtn" th:onclick="viewFileDetail([[${layerFileInfo.layerFileInfoId}]]);" title="보기">보기</button></td>
 										<td class="col-type"><button type="button" class="textBtn" th:onclick="viewLayerMap([[${layerFileInfo.layerId}]], [[${layerFileInfo.layerName}]],
-											[[${layerFileInfo.layerFileInfoId}]]);" title="보기">보기</button></td>
+											[[${layerFileInfo.layerFileInfoId}]]);" title="보기">查看</button></td>
 										<td class="col-type">
 											<th:block th:if="${#strings.equals(layerFileInfo.enableYn, 'Y')}">
-												<p style="font-size:14px;">적용중</p>
+												<p style="font-size:14px;">适用中</p>
 											</th:block>
 											<th:block th:unless="${#strings.equals(layerFileInfo.enableYn, 'Y')}">
 												<button type="button" class="textBtn" th:onclick="changeStatus([[${layerFileInfo.layerId }]], [[${layerFileInfo.layerFileInfoGroupId}]], [[${layerFileInfo.layerFileInfoId}]]);"
-														title="적용하기">적용하기</button>
+														title="应用">应用</button>
 											</th:block>
 										</td>
 										<td class="col-type"><a th:href="@{/layer/{layerId}/layer-file-info/{layerFileInfoGroupId}/download(layerId=${layer.layerId},layerFileInfoGroupId=${layerFileInfo.layerFileInfoGroupId})}" class="linkButton">다운로드</a></td>
@@ -397,16 +399,16 @@
     {{/if}}
             <td class="col-key">{{subtract ../layerFileInfoList.length @index}}</td>
             <td class="col-key" style="max-width:315px; word-wrap:break-word;">{{fileName}}</td>
-            <td class="col-type"><button type="button" class="detailBtn" title="보기" onclick="viewFileDetail('{{layerFileInfoId}}'); return false;" >보기</button>
-            <td class="col-type"><button type="button" class="textBtn" title="보기" onclick="viewLayerMap('{{layerId}}', '{{layerName}}', '{{layerFileInfoId}}'); return false;" >보기</button></td>
+            <td class="col-type"><button type="button" class="detailBtn" title="查看" onclick="viewFileDetail('{{layerFileInfoId}}'); return false;" >查看</button>
+            <td class="col-type"><button type="button" class="textBtn" title="查看" onclick="viewLayerMap('{{layerId}}', '{{layerName}}', '{{layerFileInfoId}}'); return false;" >보기</button></td>
             <td class="col-type">
     {{#if enableYn}}
-               	<p style="font-size:14px;">적용중</p>
+               	<p style="font-size:14px;">适用中</p>
     {{else}}
-                <button type="button" onclick="changeStatus('{{layerId}}', '{{layerFileInfoGroupId}}', '{{layerFileInfoId}}'); return false;" title="적용하기" class="textBtn">적용하기</button>
+                <button type="button" onclick="changeStatus('{{layerId}}', '{{layerFileInfoGroupId}}', '{{layerFileInfoId}}'); return false;" title="应用" class="textBtn">적용하기</button>
     {{/if}}
             </td>
-            <td class="col-type"><a href="/layer/{{layerId }}/layer-file-info/{{layerFileInfoGroupId}}/download" download class="linkButton">다운로드</button></td>
+            <td class="col-type"><a href="/layer/{{layerId }}/layer-file-info/{{layerFileInfoGroupId}}/download" download class="linkButton">下载</button></td>
             <td class="col-key">{{userId}}</td>
             <td class="col-key">{{viewUpdateDate}}</td>
 			<td class="col-key">{{viewInsertDate}}</td>
@@ -623,7 +625,7 @@
 		return;
 	}
 
-    // 업로딩 파일 개수
+    // 上传文件的数量
     var uploadFileCount = 0;
     // dropzone 업로딩 결과(n개 파일을 올리면 n개 리턴이 옴)
     var uploadFileResultCount = 0;
@@ -807,7 +809,7 @@
         });
     }
 
-	// 비활성화 상태의 layer를 활성화 함
+	// 激活未激活的layer
 	function changeStatus(layerId, layerFileInfoGroupId, layerFileInfoId) {
 		var info = "layerFileInfoGroupId=" + layerFileInfoGroupId;
 		if(confirm("이 파일을 layer Shape 파일로 사용하시겠습니까?")) {
@@ -836,7 +838,7 @@
 		resizable: false
 	});
 
- 	// 상세 정보 보기
+ 	// 查看详细信息
     function viewFileDetail(layerFileInfoId) {
     	fileInfoDetailDialog.dialog("open");
 

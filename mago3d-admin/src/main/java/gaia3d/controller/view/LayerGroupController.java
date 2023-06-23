@@ -30,7 +30,7 @@ public class LayerGroupController {
 	private PolicyService policyService;
 
 	/**
-	 * 레이어 그룹 목록
+	 * 图层组列表
 	 * @param request
 	 * @param layerGroup
 	 * @param model
@@ -47,7 +47,7 @@ public class LayerGroupController {
 	}
 
 	/**
-	 * 레이어 그룹 등록 페이지 이동
+	 * 移动图层组注册页面
 	 * @param model
 	 * @return
 	 */
@@ -69,7 +69,7 @@ public class LayerGroupController {
 	}
 
 	/**
-	 * 레이어 그룹 수정 페이지 이동
+	 * 移动图层组修改页面
 	 * @param request
 	 * @param layerGroupId
 	 * @param model

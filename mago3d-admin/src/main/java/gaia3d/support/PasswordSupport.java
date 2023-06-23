@@ -10,7 +10,7 @@ import gaia3d.domain.UserInfo;
 public class PasswordSupport {
 
 	/**
-	 * Optional 로 고쳐야 하나?
+	 * 需要用Optional来修复吗？
 	 * @param password
 	 * @return
 	 */
@@ -20,9 +20,9 @@ public class PasswordSupport {
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 			encodePassword = bCryptPasswordEncoder.encode(password);
 		} catch(IllegalArgumentException e) {
-			log.error("@@ IllegalArgumentException. 사인인 체크 암호화 처리 모듈에서 오류가 발생 했습니다. ");
+			log.error("@@ IllegalArgumentException. 签核检查加密处理模块出错。");
 		} catch(Exception e) {
-			log.error("@@ 사인인 체크 암호화 처리 모듈에서 오류가 발생 했습니다. ");
+			log.error("@@ 签核检查加密处理模块出错。");
 		}
 		return encodePassword;
 	}
@@ -36,9 +36,9 @@ public class PasswordSupport {
 				result = true;
 			}
 		} catch(IllegalArgumentException e) {
-			log.error("@@ IllegalArgumentException. 사인인 체크 암호화 처리 모듈에서 오류가 발생 했습니다. ");
+			log.error("@@ IllegalArgumentException.签核检查加密处理模块出错。 ");
 		} catch(Exception e) {
-			log.error("@@ 사인인 체크 암호화 처리 모듈에서 오류가 발생 했습니다. ");
+			log.error("@@ 签核检查加密处理模块出错。 ");
 		}
 		return result;
 	}
@@ -149,7 +149,7 @@ public class PasswordSupport {
 //	}
 	
 	/**
-	 * 동일 문자 연속 입력 검증 (111, aaa)
+	 * 验证相同字符的连续输入 (111, aaa)
 	 * 
 	 * @param pwd
 	 * @return
@@ -191,7 +191,7 @@ public class PasswordSupport {
 	}
 
 	/**
-	 * 연속되는 문자 입력 검증 (123, abc)
+	 * 验证连续字符输入 (123, abc)
 	 * 
 	 * @param pwd
 	 * @return

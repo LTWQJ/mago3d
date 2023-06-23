@@ -32,7 +32,7 @@ public class AccessLogRestController {
 	private AccessLogService accessLogService;
 	
 	/**
-	 * 모든 서비스 요청에 대한 이력
+	 * 所有服务请求的历史记录
 	 * @param model
 	 * @return
 	 */

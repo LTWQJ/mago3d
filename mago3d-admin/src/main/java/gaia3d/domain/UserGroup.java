@@ -32,7 +32,7 @@ public class UserGroup {
 	public static final Integer GUEST = 6;
 	public static final Integer TEMP = 7;
 
-	/****** 화면 표시용 *******/
+	/****** 用于显示屏幕 *******/
 	private String open;
 	private String nodeType;
 	private String parentName;

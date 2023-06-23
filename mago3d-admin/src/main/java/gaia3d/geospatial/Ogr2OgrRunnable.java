@@ -52,8 +52,10 @@ public class Ogr2OgrRunnable implements Runnable {
 		command.add("-f");
 		command.add("PostgreSQL");
 		//command.add(this.driver);
-		command.add("PG:host=localhost dbname=mago3d user=test password=test");
-		
+		command.add("PG:host=localhost dbname=mago3d user=postgres password=ltw123");
+		//command.add("PG:host=localhost dbname=mago3d user=test password=test");
+
+
 		// shape file full path 파일 호가장자 까지
 		command.add(this.shapeFile);
 		command.add("-nlt");

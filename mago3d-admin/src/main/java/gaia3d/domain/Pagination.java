@@ -8,6 +8,7 @@ import lombok.ToString;
 
 /**
  * Service 계층에서 페이지 처리를 Controller 계층으로 전달하기 위한 도메인
+ * 从Service阶层将页面处理传递到Controller阶层的域名
  * @author jeongdae
  *
  */

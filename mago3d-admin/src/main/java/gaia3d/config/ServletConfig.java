@@ -57,7 +57,7 @@ public class ServletConfig implements WebMvcConfigurer {
     }
 
 	/**
-	 * 내부에 List로 저장하기 때문에 순서대로 저장
+	 * 按顺序保存，因为它在内部存储为 List
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -108,7 +108,7 @@ public class ServletConfig implements WebMvcConfigurer {
 	}
 	
 	/**
-     * anotation @Valid 를 사용하려면 이 빈을 생성해 줘야 함
+     * anotation @Valid 必须创建此空才能使用
      */
     @Bean
     public LocalValidatorFactoryBean getValidator() {

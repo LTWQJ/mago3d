@@ -1,7 +1,7 @@
 package gaia3d.domain;
 
 /**
- * cache 전파 유형. self 자신만, user 사용자 페이지 갱신. broadcase 전체
+ * cache 传播类型。self 自己，用户页面更新。broadcase 全部
  * @author Jeongdae
  *
  */

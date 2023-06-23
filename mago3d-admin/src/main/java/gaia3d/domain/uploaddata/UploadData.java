@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 사용자 업로드 정보
+ * 用户上传信息
  * @author Cheon JeongDae
  *
  */

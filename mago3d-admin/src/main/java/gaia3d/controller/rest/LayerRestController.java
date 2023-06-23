@@ -118,7 +118,7 @@ public class LayerRestController implements AuthorizationController {
 		List<LayerFileInfo> layerFileInfoList = new ArrayList<>();
 		layerService.insertLayer(layer, layerFileInfoList);
 		String layerType = layer.getLayerType();
-		// 레이어 타입이 vector일 경우에만 스타일 설정 
+		// 只有图层类型是vector时才会设定样式
 		if(LayerType.VECTOR == LayerType.valueOf(layerType.toUpperCase())) {
 			layerService.updateLayerStyle(layer);
 		}
@@ -158,7 +158,7 @@ public class LayerRestController implements AuthorizationController {
 			Boolean layerKeyDuplication = layerService.isLayerKeyDuplication(request.getParameter("layerKey"));
 			if(layerKeyDuplication) {
 				result.put("statusCode", HttpStatus.BAD_REQUEST.value());
-				result.put("errorCode", "layer.key.duplication");
+				result.put("errorCode", "图层密钥重复");
 				return result;
 			}
 
@@ -198,7 +198,7 @@ public class LayerRestController implements AuthorizationController {
 							.build();
 			log.info("@@ layer = {}", layer);
 
-			//由于layer的变更次数不多预计将以年为单位进行管理
+			// 由于layer的变更次数不多预计将以年为单位进行管理
 			String makedDirectory = propertiesConfig.getLayerUploadDir();
 			createDirectory(makedDirectory);
 			makedDirectory = makedDirectory + today.substring(0, 4) + File.separator;
@@ -207,7 +207,7 @@ public class LayerRestController implements AuthorizationController {
 
 			String groupFileName = request.getParameter("layerKey") + "_" + today;
 
-			// 虽然只有一件，但对于zip来说
+			// 한건이면서 zip 의 경우
 			boolean isZipFile = false;
 			int fileCount = fileMap.values().size();
 			log.info("********************************************* fileCount = {}", fileCount);
@@ -300,7 +300,7 @@ public class LayerRestController implements AuthorizationController {
 			// 3. 图层基本信息和图层履历信息登记
 			updateLayerMap = layerService.insertLayer(layer, layerFileInfoList);
 			if (!layerFileInfoList.isEmpty()) {
-				// 4. org2ogr实行
+				// 4. org2ogr 실행
 				layerService.insertOgr2Ogr(layer, isLayerFileInfoExist, (String) updateLayerMap.get("shapeFileName"),
 						(String) updateLayerMap.get("shapeEncoding"));
 
@@ -309,52 +309,54 @@ public class LayerRestController implements AuthorizationController {
 				orgMap.put("fileVersion", ((Integer) updateLayerMap.get("fileVersion")).toString());
 				orgMap.put("tableName", layer.getLayerKey());
 				orgMap.put("enableYn", "Y");
-				// 5. 激活shape文件表中的当前数据并更新日期
-				layerFileInfoService.updateOgr2OgrDataFileVersion(orgMap);
-				// 6. 如果是在geoserver新注册，就注册，否则通过
-				layerService.registerLayer(geoPolicy, layer.getLayerKey());
+				// 레이어 타입이 vector일 경우에만 스타일 설정
 				String layerType = layer.getLayerType();
-				// 只有图层类型是vector时才会设定样式
 				if(LayerType.VECTOR == LayerType.valueOf(layerType.toUpperCase())) {
 					layerService.updateLayerStyle(layer);
 				}
+//				// 5. shape 激活文件表上的当前数据并更新日期
+//				layerFileInfoService.updateOgr2OgrDataFileVersion(orgMap);
+//				// 6. geoserver如果是新注册就注册，否则通过
+//				layerService.registerLayer(geoPolicy, layer.getLayerKey());
+//
+
 			}
 
 			statusCode = HttpStatus.OK.value();
 		} catch(DataAccessException e) {
-			//ogr2ogr2运行时出现错误时，删除已插入的图层和图样文件信息
-			Integer layerId = (Integer) updateLayerMap.get("layerId");
-			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
-			layerService.deleteLayer(layerId);
-			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
-			
-			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
-			errorCode = "db.exception";
-			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+			// ogr2ogr2 如果执行过程中出现错误，将删除已插入的图层和图层文件信息
+//			Integer layerId = (Integer) updateLayerMap.get("layerId");
+//			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
+//			layerService.deleteLayer(layerId);
+//			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
+//
+//			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+//			errorCode = "db.exception";
+//			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
 			log.info("@@ db.exception. message = {}", message);
 		} catch(RuntimeException e) {
-			// ogr2ogr2 실행하다가 에러날경우 이미 들어간 레이어, 레이러 파일정보 삭제 
-			Integer layerId = (Integer) updateLayerMap.get("layerId");
-			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
-			layerService.deleteLayer(layerId);
-			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
-			
-			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
-			errorCode = "runtime.exception";
-			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
-			LogMessageSupport.printMessage(e, "@@ runtime.exception. message = {}", message);
+			// ogr2ogr2 如果执行过程中出现错误，将删除已插入的图层和图层文件信息
+//			Integer layerId = (Integer) updateLayerMap.get("layerId");
+//			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
+//			layerService.deleteLayer(layerId);
+//			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
+//
+//			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+//			errorCode = "runtime.exception";
+//			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+//			LogMessageSupport.printMessage(e, "@@ runtime.exception. message = {}", message);
 //			log.info("@@ runtime.exception. message = {}", message);
 		} catch(Exception e) {
-			// ogr2ogr2运行时出现错误时，删除已插入的图层和图样文件信息
-			Integer layerId = (Integer) updateLayerMap.get("layerId");
-			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
-			layerService.deleteLayer(layerId);
-			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
-			
-			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
-			errorCode = "unknown.exception";
-			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
-			LogMessageSupport.printMessage(e, "@@ exception. message = {}", message);
+			// ogr2ogr2 如果执行过程中出现错误，将删除已插入的图层和图层文件信息
+//			Integer layerId = (Integer) updateLayerMap.get("layerId");
+//			Integer layerFileInfoGroupId = (Integer) updateLayerMap.get("layerFileInfoGroupId");
+//			layerService.deleteLayer(layerId);
+//			layerFileInfoService.deleteLayerFileInfoByGroupId(layerFileInfoGroupId);
+//
+//			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+//			errorCode = "unknown.exception";
+//			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+//			LogMessageSupport.printMessage(e, "@@ exception. message = {}", message);
 //			log.info("@@ exception. message = {}", message);
 		}
 
@@ -376,7 +378,7 @@ public class LayerRestController implements AuthorizationController {
 		List<LayerFileInfo> layerFileInfoList = new ArrayList<>();
 		layerService.updateLayer(layer, false, layerFileInfoList);
 		String layerType = layer.getLayerType();
-		// 只有图层类型是vector时才会设定样式
+		// 레이어 타입이 vector일 경우에만 스타일 설정 
 		if(LayerType.VECTOR == LayerType.valueOf(layerType.toUpperCase())) {
 			layerService.updateLayerStyle(layer);
 		}
@@ -390,7 +392,7 @@ public class LayerRestController implements AuthorizationController {
 	}
 	
     /**
-    * shape 파일 변환
+    * shape 文件转换
     * TODO dropzone 이 파일 갯수만큼 form data를 전송해 버려서 command 패턴을(Layer layer) 사용할 수 없음
     * dropzone 이 예외 처리가 이상해서 BAD_REQUEST 를 던지지 않고 OK 를 넣짐
     * @param model
@@ -442,7 +444,7 @@ public class LayerRestController implements AuthorizationController {
             // 对于layer文件，一组文件必须是同名的扩展名。
             String groupFileName = layer.getLayerKey() + "_" + today;
 
-            // 한건이면서 zip 의 경우
+            // 虽然只有一件，但对于zip来说
             boolean isZipFile = false;
             int fileCount = fileMap.values().size();
             log.info("********************************************* fileCount = {}", fileCount);
@@ -466,7 +468,7 @@ public class LayerRestController implements AuthorizationController {
                     String saveFileName = groupFileName;
                     LayerFileInfo layerFileInfo = new LayerFileInfo();
 
-                    // 파일 기본 validation 체크
+                    // 检查文件默认 validation
                     errorCode = fileValidate(policy, multipartFile);
                     if(!StringUtils.isEmpty(errorCode)) {
                     	result.put("statusCode", HttpStatus.BAD_REQUEST.value());
@@ -517,7 +519,7 @@ public class LayerRestController implements AuthorizationController {
                 }
             }
 
-            // shape 필수 파일 확인
+            // shape 确认必需文件
  			errorCode = shapeFileValidate(layerFileInfoList);
  			if(!StringUtils.isEmpty(errorCode)) {
  				log.info("@@@@@@@@@@@@ errorCode = {}", errorCode);
@@ -526,7 +528,7 @@ public class LayerRestController implements AuthorizationController {
  	            return result;
  			}
 
-            // 确认shp文件的必需字段
+            // shp 确认文件必需字段
  			ShapeFileParser shapeFileParser = new ShapeFileParser(makedDirectory + groupFileName + "." + ShapeFileExt.SHP.getValue());
  			if(!shapeFileParser.fieldValidate()) {
  				result.put("statusCode", HttpStatus.BAD_REQUEST.value());
@@ -571,21 +573,21 @@ public class LayerRestController implements AuthorizationController {
                 isRollback = true;
 
                 deleteLayerFileInfoGroupId = (Integer)updateLayerMap.get("layerFileInfoGroupId");
-                // 4. org2ogr 실행
+                // 4. org2ogr执行
                 layerService.insertOgr2Ogr(layer, isLayerFileInfoExist, (String)updateLayerMap.get("shapeFileName"), (String)updateLayerMap.get("shapeEncoding"));
 
-                // org2ogr 로 등록한 데이터의 version을 갱신
+                // 更新以org2ogr登记的数据版本
                 Map<String, String> orgMap = new HashMap<>();
                 orgMap.put("fileVersion", ((Integer)updateLayerMap.get("fileVersion")).toString());
                 orgMap.put("tableName", layer.getLayerKey());
                 orgMap.put("enableYn", "Y");
-                // 5. shape 파일 테이블의 현재 데이터의 활성화 하고 날짜를 업데이트
+                // 5. 激活shape文件表中的当前数据并更新日期
                 layerFileInfoService.updateOgr2OgrDataFileVersion(orgMap);
-                // 6. geoserver에 신규 등록일 경우 등록, 아닐경우 통과
+                // 6. 如果是在geoserver新注册，就注册，否则通过
                 layerService.registerLayer(geoPolicy, layer.getLayerKey());
             }
             String layerType = layer.getLayerType();
-			// 레이어 타입이 vector일 경우에만 스타일 설정 
+			// 只有图层类型是vector时才会设定样式
 			if(LayerType.VECTOR == LayerType.valueOf(layerType.toUpperCase())) {
 				layerService.updateLayerStyle(layer);
 			}
@@ -596,7 +598,7 @@ public class LayerRestController implements AuthorizationController {
                 // rollback 처리
                 layerService.rollbackLayer(rollbackLayer, isLayerFileInfoExist, rollbackLayerFileInfo, deleteLayerFileInfoGroupId);
             }
-        	
+
 			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
 			errorCode = "db.exception";
 			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
@@ -606,7 +608,7 @@ public class LayerRestController implements AuthorizationController {
                 // rollback 처리
                 layerService.rollbackLayer(rollbackLayer, isLayerFileInfoExist, rollbackLayerFileInfo, deleteLayerFileInfoGroupId);
             }
-			
+
 			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
 			errorCode = "runtime.exception";
 			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
@@ -616,7 +618,7 @@ public class LayerRestController implements AuthorizationController {
                 // rollback 처리
                 layerService.rollbackLayer(rollbackLayer, isLayerFileInfoExist, rollbackLayerFileInfo, deleteLayerFileInfoGroupId);
             }
-			
+
 			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
 			errorCode = "unknown.exception";
 			message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
@@ -650,7 +652,7 @@ public class LayerRestController implements AuthorizationController {
 	}
 
     /**
-    * shape 文件目录
+    * shape 파일 목록
     * @param model
     * @return
     */
@@ -741,7 +743,7 @@ public class LayerRestController implements AuthorizationController {
     }
 
     /**
-    * 비활성화 상태의 layer를 활성화
+    * 激活未激活的layer
     * @param model
     * @return
     */
@@ -980,7 +982,7 @@ public class LayerRestController implements AuthorizationController {
     }
 
     /**
-    * 다운로드시 한글 깨짐 방지 처리
+    * 下载时韩文防止破损处理
     */
     private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String browser = WebUtils.getBrowser(request);

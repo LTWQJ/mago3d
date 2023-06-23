@@ -28,7 +28,7 @@ public interface ConverterService {
 	Long getConverterJobFileTotalCount(ConverterJobFile converterJobFile);
 
 	/**
-	 * f4d converter job 목록
+	 * f4d converter job 列表
 	 * @param converterJob converterJob
 	 * @return f4d converter job 목록
 	 */

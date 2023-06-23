@@ -12,47 +12,47 @@ import gaia3d.domain.UserGroupRole;
 public interface UserGroupMapper {
 
 	/**
-     * 사용자 그룹 목록
+     * 用户组列表
      * @return
      */
     List<UserGroup> getListUserGroup();
 
     /**
-     * 사용자 그룹 정보 조회 조회
+     * 查看用户组信息查询
      * @param userGroup
      * @return
      */
     UserGroup getUserGroup(UserGroup userGroup);
 
     /**
-     * 기본 사용자 그룹 정보 조회
+     * 查看默认用户组信息
      * @return
      */
     UserGroup getBasicUserGroup();
 
     /**
-     * 부모와 표시 순서로 메뉴 조회
+     * 按父菜单和显示顺序查看菜单
      * @param userGroup
      * @return
      */
     UserGroup getUserGroupByParentAndViewOrder(UserGroup userGroup);
     
     /**
-     * 조상이 같은 사용자 그룹 아이디 목록
+     * 具有相同祖先的用户组 ID 列表
      * @param userGroupId
      * @return
      */
     List<Integer> getUserGroupIdByAncestor(Integer userGroupId);
     
     /**
-     * 부모가 같은 사용자 그룹 아이디 목록
+     * 具有相同父级的用户组 ID 列表
      * @param userGroupId
      * @return
      */
     List<Integer> getUserGroupIdByParent(Integer userGroupId);
 
     /**
-     * 사용자 그룹 Key 중복 확인
+     * 检查用户组密钥重复项
      * @param userGroup
      * @return
      */
@@ -80,7 +80,7 @@ public interface UserGroupMapper {
 	List<String> getListUserGroupRoleKey(UserGroupRole userGroupRole);
 
     /**
-     * 사용자 그룹 등록
+     * 注册用户组
      * @param userGroup
      * @return
      */

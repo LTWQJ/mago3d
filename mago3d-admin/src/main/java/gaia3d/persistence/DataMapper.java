@@ -14,90 +14,90 @@ import org.springframework.stereotype.Repository;
 public interface DataMapper {
 
 	/**
-	 * Data 수
+	 * Data 数量
 	 * @param dataInfo
 	 * @return
 	 */
 	Long getDataTotalCount(DataInfo dataInfo);
 	
 	/**
-	 * 데이터 상태별 통계 정보
+	 * 按数据状态列出的统计信息
 	 * @param dataInfo
 	 * @return
 	 */
 	Long getDataTotalCountByStatus(String status);
 	
 	/**
-	 * Data 목록
+	 * Data 列表
 	 * @param dataInfo
 	 * @return
 	 */
 	List<DataInfo> getListData(DataInfo dataInfo);
 	
 	/**
-	 * 데이터 그룹에 포함되는 모든 데이터를 취득
+	 * 获取数据组中包含的所有数据
 	 * @param dataGroupId
 	 * @return
 	 */
 	List<DataInfoSimple> getListAllDataByDataGroupId(Integer dataGroupId);
 	
 	/**
-	 * Data Key 중복 건수
+	 * Data Key 重复数量
 	 * @param dataInfo
 	 * @return
 	 */
 	Integer getDuplicationKeyCount(DataInfo dataInfo);
 	
 	/**
-	 * Data 정보 취득
+	 * Data 获取信息
 	 * @param dataInfo
 	 * @return
 	 */
 	DataInfo getData(DataInfo dataInfo);
 	
 	/**
-	 * Data 정보 취득
+	 * Data 获取信息
 	 * @param dataInfo
 	 * @return
 	 */
 	DataInfo getDataByDataKey(DataInfo dataInfo);
 	
 	/**
-	 * 최상위 root dataInfo 정보 취득
+	 * 获取顶级 root dataInfo 信息
 	 * @param dataGroupId
 	 * @return
 	 */
 	DataInfo getRootDataByDataGroupId(Integer dataGroupId);
 	
 	/**
-	 * Data 정보 취득
+	 * Data 获取信息
 	 * @param dataInfo
 	 * @return
 	 */
 	List<DataInfo> getDataByConverterJob(DataInfo dataInfo);
 	
 	/**
-	 * 표시 순서
+	 * 显示顺序
 	 * @param dataInfo
 	 * @return
 	 */
 	Integer getViewOrderByParent(DataInfo dataInfo);
 	
 	/**
-	 * 한 프로젝트 내 Root Parent 개수를 체크
+	 * 检查一个项目中的 Root 类别数
 	 * @param dataInfo
 	 * @return
 	 */
 	Integer getRootParentCount(DataInfo dataInfo);
 
 	/**
-	 * 데이터 현황
+	 * 数据状态
 	 * @return
 	 */
 	List<DataInfo> getDataTypeCount();
 	
 	/**
-	 * Data 등록
+	 * Data 注册
 	 * @param dataInfo
 	 * @return
 	 */

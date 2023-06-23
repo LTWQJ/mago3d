@@ -28,7 +28,7 @@ public class ShapeFileParser {
 	}
 	
 	/**
-	 * 检查shape file的必需专栏
+	 * shape file의 필수 칼럼 검사 
 	 * @return
 	 */
 	public Boolean fieldValidate() {
@@ -39,20 +39,19 @@ public class ShapeFileParser {
             if(!shpFile.exists(ShpFileType.SHP)) {
             	return true;
             }
-            // 因为只会检查场地，所以没有另外设定编码
-
+            // field만 검사할 것이기 때문에 따로 인코딩은 설정하지 않음 
             reader = new DbaseFileReader(shpFile, false, Charset.defaultCharset());
-            System.out.println("数据值==========================================================="+Charset.defaultCharset()+"====================================================");
             DbaseFileHeader header = reader.getHeader();
             int filedValidCount = 0;
-            // 现场计数
+            // 필드 카운트
             int numFields = header.getNumFields();
             for(int iField=0; iField < numFields; ++iField) {
                 String fieldName = header.getFieldName(iField);
                 if(ShapeFileField.findBy(fieldName) != null) filedValidCount++;
             }
-            // 确认是否有必要的评论，然后再回报
+            // 필수 칼럼이 모두 있는지 확인한 결과 리턴 
             fieldValid = (filedValidCount == ShapeFileField.values().length) ? true : false;
+            
             reader.close();
         } catch (MalformedURLException e) {
             log.info("MalformedURLException ============ {}", e.getMessage());
@@ -63,7 +62,7 @@ public class ShapeFileParser {
         return fieldValid;
 	}
 	/**
-	 * 破解shape文件
+	 * shape 파일 파싱
 	 * @param fileName
 	 */
 	public void parse(String fileName) {

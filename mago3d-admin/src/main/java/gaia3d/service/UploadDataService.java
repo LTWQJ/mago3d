@@ -43,7 +43,7 @@ public interface UploadDataService {
 //	Long getUploadDataFileTotalSize(UploadDataFile uploadDataFile);
 	
 	/**
-	 * 업로딩 데이터 파일 목록
+	 * 上传数据文件列表
 	 * @param uploadData
 	 * @return
 	 */
@@ -85,7 +85,7 @@ public interface UploadDataService {
 	int deleteUploadData(UploadData uploadData);
 
 	/**
-	 * 사용자 파일 정보 수정 및 업로드 파일 정보 수정
+	 * 修改用户文件信息并修改上载文件信息
 	 * @param uploadData
 	 * @return
 	 */

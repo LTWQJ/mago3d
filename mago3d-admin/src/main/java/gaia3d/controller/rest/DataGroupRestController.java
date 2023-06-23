@@ -49,7 +49,7 @@ public class DataGroupRestController {
 	private ObjectMapper objectMapper;
 
 	/**
-	 * 그룹Key 중복 체크
+	 * 组密钥重复检查
 	 * @param model
 	 * @return
 	 */
@@ -80,7 +80,7 @@ public class DataGroupRestController {
 	}
 	
 	/**
-	 * 사용자 데이터 그룹 정보
+	 * 用户数据组信息
 	 * @param dataGroup
 	 * @return
 	 */
@@ -103,7 +103,7 @@ public class DataGroupRestController {
 	}
 	
 	/**
-	 * 데이터 그룹 등록
+	 * 注册数据组
 	 * @param request
 	 * @param dataGroup
 	 * @param bindingResult
@@ -144,7 +144,7 @@ public class DataGroupRestController {
 	}
 
 	/**
-	 * 데이터 그룹 수정
+	 * 修改数据组
 	 * @param request
 	 * @param dataGroup
 	 * @param bindingResult
@@ -173,7 +173,7 @@ public class DataGroupRestController {
 	}
 
 	/**
-	 * 데이터 그룹 트리 순서 수정 (up/down)
+	 * 修改数据组树的顺序 (up/down)
 	 * @param request
 	 * @param dataGroupId
 	 * @param dataGroup
@@ -202,7 +202,7 @@ public class DataGroupRestController {
 	}
 	
 	/**
-	 * Smart Tiling 데이터 다운로드
+	 * Smart Tiling 下载数据
 	 * @param model
 	 * @return
 	 */
@@ -239,7 +239,7 @@ public class DataGroupRestController {
 	}
 	
 	/**
-	 * Smart Tiling Converter용 JSON 다운로드
+	 * 下载适用于智能 Tiling Converter 的 JSON
 	 * @param model
 	 * @return
 	 */
@@ -282,7 +282,7 @@ public class DataGroupRestController {
 			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 			String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tgt);
 			
-			// 불필요한 코드
+			// 不必要的代码
 			//dataJson = dataJson.replaceAll("<", "&lt;");
 			//dataJson = dataJson.replaceAll(">", "&gt;");
 			response.getWriter().write(result);

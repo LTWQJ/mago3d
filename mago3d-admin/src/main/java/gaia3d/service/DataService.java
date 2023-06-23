@@ -42,7 +42,7 @@ public interface DataService {
 	List<DataInfoSimple> getListAllDataByDataGroupId(Integer dataGroupId);
 	
 	/**
-	 * Data 정보 취득
+	 * Data 获取信息
 	 * @param dataInfo
 	 * @return
 	 */
@@ -83,7 +83,7 @@ public interface DataService {
 	int updateData(DataInfo dataInfo);
 	
 	/**
-	 * Data Bulk 등록
+	 * Data Bulk 注册
 	 * @param dataFileInfo
 	 * @return
 	 */

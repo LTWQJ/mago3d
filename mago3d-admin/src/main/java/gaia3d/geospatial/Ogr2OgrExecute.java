@@ -22,6 +22,7 @@ public class Ogr2OgrExecute {
     private String exportPath;
     private String sql;
     private String environmentPath;
+    
 
     public Ogr2OgrExecute(String osType, String driver, String shapeFile, String shapeEncoding, String tableName, String updateOption, String layerSourceCoordinate, String layerTargetCoordinate, String environmentPath) {
         this.osType = osType;

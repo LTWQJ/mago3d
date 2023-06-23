@@ -89,7 +89,7 @@ public class DataSmartTilingFileJsonParser implements DataSmartTilingFileParser 
 	}
 	
 	/**
-	 * 자식 data 들을 재귀적으로 파싱
+	 * 递归解析子数据
 	 * @param dataInfoList
 	 * @param depth
 	 * @param childrenNode

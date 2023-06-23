@@ -16,8 +16,7 @@ public enum ShapeFileField {
 	
 	public static ShapeFileField findBy(String value) {
 		for(ShapeFileField shapeFileField : values()) {
-			if(shapeFileField.getValue().equals(value))
-				return shapeFileField;
+			if(shapeFileField.getValue().equals(value)) return shapeFileField;
 		}
 		return null;
 	}

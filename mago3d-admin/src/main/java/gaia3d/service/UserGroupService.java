@@ -9,26 +9,26 @@ import gaia3d.domain.UserGroupRole;
 public interface UserGroupService {
 
 	/**
-     * 사용자 그룹 목록
+     * 用户组列表
      * @return
      */
     List<UserGroup> getListUserGroup();
 
     /**
-     * 사용자 그룹 정보 조회 조회
+     * 查看用户组信息查询
      * @param userGroup
      * @return
      */
     UserGroup getUserGroup(UserGroup userGroup);
 
     /**
-     * 기본 사용자 그룹 정보 조회
+     * 查看默认用户组信息
      * @return
      */
     UserGroup getBasicUserGroup();
 
 	/**
-	 * 사용자 그룹 메뉴 권한 목록
+	 * 用户组菜单权限列表
 	 * @param userGroupMenu
 	 * @return
 	 */

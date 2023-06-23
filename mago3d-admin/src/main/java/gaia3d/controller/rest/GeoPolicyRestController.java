@@ -79,7 +79,7 @@ public class GeoPolicyRestController {
 		UserPolicy userPolicy = userPolicyService.getUserPolicy(userSession.getUserId());
 		
 		if(dataId != null && dataId.trim() != "") {
-			// dataId가 있을경우 data 위치로 가기 위해 위치값을 변경해줌 
+			// 如果存在 dataId，请更改位置以转到数据位置。
 			DataInfo data = DataInfo.builder().dataId(Long.parseLong(dataId)).build();
 			DataInfo dataInfo = dataService.getData(data);
 			geoPolicy.setInitCameraEnable(false);

@@ -68,7 +68,7 @@ public class ConverterRestController {
 		UserSession userSession = (UserSession)request.getSession().getAttribute(Key.USER_SESSION.name());
 		converterJob.setUserId(userSession.getUserId());
 		
-		converterService.insertConverter(converterJob);
+		converterService.insertConverter(converterJob);//调用service层保存文件信息及文件转换信息---未将数据存入converter_job_file数据库
 		int statusCode = HttpStatus.OK.value();
 		
 		result.put("statusCode", statusCode);

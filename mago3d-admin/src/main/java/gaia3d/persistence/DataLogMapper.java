@@ -22,7 +22,7 @@ public interface DataLogMapper {
 	Long getDataInfoLogTotalCount(DataInfoLog dataInfoLog);
 	
 	/**
-	 * 데이터 변경 요청 로그
+	 * 数据更改请求日志
 	 * @param dataInfoLog
 	 * @return
 	 */

@@ -31,35 +31,35 @@ public class UserSession implements Serializable {
 	 */
 	private static final long serialVersionUID = -7501829694372184669L;
 
-	/******* 세션 하이재킹 체크 *******/
+	/******* 会话劫持检查 *******/
 	private String signinIp;
 
-	// 고유번호
+	// 唯一编号
 	private String userId;
-	// 사용자 그룹 고유번호
+	// 用户组唯一编号
 	private Integer userGroupId;
-	// 사용자 그룹명(화면용)
+	// 用户组名称（用于屏幕）
 	private String userGroupName;
 	// 이름
 	private String userName;
-	// 비밀번호
+	// 密码
 	private String password;
 	// SALT(spring5부터 사용 안함)
 	private String salt;
 	
-	// 최초 로그인시 사용자 Role 권한 체크 패스 기능
+	// 首次登录时用户 Role 权限检查通行证功能
 	private String userRoleCheckYn;
-	// 사용자 상태. 0:사용중, 1:사용중지(관리자), 2:잠금(비밀번호 실패횟수 초과), 3:휴면(로그인 기간), 4:만료(사용기간 종료), 5:삭제(화면 비표시, policy.user_delete_method=0), 6:임시비밀번호
+	// 用户状态。0：忙，1：停用（管理员），2：锁定（超过密码失败次数），3：休眠（登录期间），4：过期（使用期限结束），5：删除（屏幕不显示，policy.user_delete_method=0），6：临时密码
 	private String status;
 	
 	// 사인인 실패 횟수
 	private Integer failSigninCount;
-	// 일정 기간 동안 미 접속시 잠금 처리 결과 값
+	// 一段时间内未连接时的锁定处理结果值
 	private Boolean userLastSigninLockOver;
-	// 패스워드 변경 주기 값
+	// 密码更改周期值
 	private Boolean passwordChangeTermOver;
 	
-	// 마지막 사인인 날짜
+	// 最后一个正弦日期
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime lastSigninDate;
 }

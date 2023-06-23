@@ -1,8 +1,11 @@
 package gaia3d.support;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Cheon JeongDae
@@ -25,12 +28,12 @@ public class ProcessBuilderSupport {
 		// Bug Fix : Potential Command Injection
 		
 		// 참고 : https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html
-//		Map<String, String> env = processBuilder.environment();
+		Map<String, String> env = processBuilder.environment();
 		
-//		log.info("@@@@@@@ path = {}", env.get(path));
-//		if (env.get(path) != null && !env.get(path).isEmpty()) {
-//			processBuilder.directory(new File(FilenameUtils.getName(env.get(path))));
-//		}
+		log.info("@@@@@@@ path = {}", env.get(path));
+		if (env.get(path) != null && !env.get(path).isEmpty()) {
+			processBuilder.directory(new File(FilenameUtils.getName(env.get(path))));
+		}
 		
 //		processBuilder.redirectErrorStream(true);
 //		InputStream inputStream = null;

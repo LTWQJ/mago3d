@@ -36,7 +36,7 @@ public class DataGroupController {
 	private PropertiesConfig propertiesConfig;
 	
 	/**
-	 * 데이터 그룹 목록
+	 * 数据组列表
 	 * @param request
 	 * @param dataGroup
 	 * @param model
@@ -59,7 +59,7 @@ public class DataGroupController {
 	}
 
 	/**
-	 * 데이터 그룹 등록 페이지 이동
+	 * 移动“注册数据组”页
 	 * @param model
 	 * @return
 	 */
@@ -84,7 +84,7 @@ public class DataGroupController {
 	}
 
 	/**
-	 * 데이터 그룹 수정 페이지 이동
+	 * 移动“修改数据组”页
 	 * @param request
 	 * @param dataGroupId
 	 * @param model
@@ -108,14 +108,14 @@ public class DataGroupController {
 	}
 
 	/**
-	 * 데이터 그룹 삭제
+	 * 删除数据组
 	 * @param dataGroupId
 	 * @param model
 	 * @return
 	 */
 	@GetMapping(value = "/delete")
 	public String delete(@RequestParam("dataGroupId") Integer dataGroupId, Model model) {
-		// TODO validation 체크 해야 함
+		// TODO validation 需要检查
 		if(dataGroupId == null) {
 			log.info("@@@ validation error dataGroupId = {}", dataGroupId);
 			return "redirect:/data-group/list";

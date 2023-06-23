@@ -13,7 +13,7 @@ import lombok.Data;
 public class PropertiesConfig {
 	
 	/**
-	 *本地:local，开发:develop，运营:product
+	 * 本地:local，开发:develop，运营:product
 	 */
 	private String profile;
 	
@@ -55,18 +55,18 @@ public class PropertiesConfig {
 	private String exchange;
 	private String routingKey;
 
-    // F4D 파일이 변환되는 Root 경로 이자, mago3DJS 에서 요청되는 파일의 Root 경로. ServletConfig 에서 매핑
+    // 这是转换F4D文件的Root路径，也是mago3DJS请求文件的Root路径。ServletConfig映射
     private String dataServiceDir;
-    // F4D 변환 결과 로그 저장 경로
+    // F4D转换结果显示日志存储路径
     private String dataConverterLogDir;
-    // 데이터 라이브러리 F4D 변환 결과 로그 저장 경로
+    // 数据库F4D转换结果日志存储路径
     private String dataLibraryConverterLogDir;
-    // 관리자용
+    // 管理自用
     private String adminDataServiceDir;
     private String adminDataLibraryServiceDir;
     private String adminDataServicePath;
     private String adminDataLibraryServicePath;
-    // 사용자용
+    // 使用自用
     private String userDataServiceDir;
     private String userDataLibraryServiceDir;
     private String userDataServicePath;
